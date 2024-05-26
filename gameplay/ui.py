@@ -12,6 +12,7 @@ from os.path import join
 class UI(object):
     def __init__(self, data_parser, scorekeeper, data_fp, is_disable):
         #  Base window setup
+        capacity = 10
         w, h = 1280, 800
         self.root = tk.Tk()
         self.root.title("Beaverworks SGAI 2023 - Dead or Alive")
@@ -69,7 +70,7 @@ class UI(object):
         self.clock = Clock(self.root, w, h, init_h, init_m)
 
         # Display ambulance capacity
-        self.capacity_meter = CapacityMeter(self.root, w, h, data_parser.capacity)
+        self.capacity_meter = CapacityMeter(self.root, w, h, capacity)
 
         self.root.mainloop()
 
