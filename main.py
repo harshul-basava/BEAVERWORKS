@@ -11,10 +11,12 @@ class Main(object):
     Base class for the SGAI 2023 game
     """
     def __init__(self, is_automode, is_disable):
-        self.data_fp = os.getenv("SGAI_DATA", default=os.path.join('data', 'default_dataset'))
+        self.data_fp = os.getenv("SGAI_DATA", default='data')
         self.data_parser = DataParser(self.data_fp)
 
-        self.scorekeeper = ScoreKeeper(self.data_parser.shift_length, self.data_parser.capacity)
+        shift_length = 720
+        capacity = 10
+        self.scorekeeper = ScoreKeeper(shift_length,capacity)
 
         if not is_automode:  # Launch UI gameplay
             self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, is_disable)

@@ -4,6 +4,7 @@ import random
 import tkinter as tk
 from PIL import Image
 import torch
+import numpy as np
 from torchvision import transforms
 
 from gameplay.enums import ActionCost, State
@@ -12,7 +13,7 @@ from models.DefaultCNN import DefaultCNN
 
 class MachineInterface(object):
     def __init__(self, root, w, h, is_automode=False, model_file=os.path.join('models', 'default.pth'),
-                 img_data_root=os.path.join('data', 'default_dataset')):
+                 img_data_root='data'):
         self.text = ""
         self.is_automode = is_automode
         self.img_data_root = img_data_root
@@ -20,6 +21,7 @@ class MachineInterface(object):
         # load model
         self.net = None
         self.is_model_loaded: bool = self._load_model(model_file)
+        self.device = 'cpu'
 
         if not self.is_automode:
             self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.1 * h))
@@ -68,10 +70,12 @@ class MachineInterface(object):
         # Working Zombie versus Human Classifier!
         # - This a basic CNN implemented in pytorch for predicting if an image is a Human or a Zombie.
         # - Based on the pytorch example here: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
-        image_loader = transforms.Compose([transforms.ToTensor()])
+        image_loader = transforms.Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
-        img_ = image_loader(img_).float()
-        img_ = img_.unsqueeze(0)
+        img_ = image_loader(img_).float().unsqueeze(0).to(self.device)
 
         self.net.eval()
         with torch.no_grad():
@@ -79,7 +83,10 @@ class MachineInterface(object):
             outputs = self.net(img_)
             # the class with the highest energy is what we choose as prediction
             _, predicted = torch.max(outputs.data, 1)
-            class_strings = ['corpse', 'healthy', 'injured', 'zombie']
+            class_strings =  np.array([State.CORPSE.value,
+                                        State.ZOMBIE.value,
+                                        State.INJURED.value,
+                                        State.HEALTHY.value,], dtype=object)
             class_string = class_strings[predicted.item()]
             predicted_state = State(class_string)
 

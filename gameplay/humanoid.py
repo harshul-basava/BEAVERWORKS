@@ -5,10 +5,10 @@ class Humanoid(object):
     """
     Are they a human or a zombie???
     """
-    def __init__(self, fp, state, value):
+    def __init__(self, fp, state, value = 0):
         self.fp = fp
         self.state = state
-        self.value = value
+        # self.value = value
 
     def is_zombie(self):
         return self.state == State.ZOMBIE.value
