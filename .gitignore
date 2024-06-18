@@ -1,3 +1,7 @@
+# ADDITIONAL GITIGNORE
+# remove unnecessary log files
+model_training/RL-logs/
+
 # PYTHON GENERIC FROM GITHUB
 # Byte-compiled / optimized / DLL files
 __pycache__/
