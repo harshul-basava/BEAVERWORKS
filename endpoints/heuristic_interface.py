@@ -74,7 +74,7 @@ class HeuristicInterface(object):
             return False
 
     def suggest(self, humanoid, capacity_full=False):
-        if self.is_model_loaded:
+        if self.predictor.is_model_loaded:
             action = self.get_model_suggestion(humanoid, capacity_full)
         else:
             action = self.get_random_suggestion()
@@ -101,10 +101,10 @@ class HeuristicInterface(object):
 
     def get_model_suggestion(self, humanoid, is_capacity_full) -> ActionCost:
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
-        probs = self.predictor.get_probs(img_)
+        probs: np.ndarray = self.predictor.get_probs(img_)
         
-        _, predicted = torch.max(probs, 1)
-        class_string = Humanoid.get_all_states()[predicted.item()]
+        predicted_ind: int = np.argmax(probs, 0)
+        class_string = Humanoid.get_all_states()[predicted_ind]
         predicted_state = State(class_string)
 
         # given the model's class prediction, recommend an action
