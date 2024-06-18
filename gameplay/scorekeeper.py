@@ -1,56 +1,114 @@
-from gameplay.enums import ActionCost
+from gameplay.enums import ActionCost, ActionState
 
+MAP_ACTION_STR_TO_INT = {s.value:i for i,s in enumerate(ActionState)}
+MAP_ACTION_INT_TO_STR = [s.value for s in ActionState]
 
 class ScoreKeeper(object):
     def __init__(self, shift_len, capacity):
-        self.__ambulance = {
+        self.shift_len = int(shift_len)  # minutes
+        self.capacity = capacity
+        self.reset()
+        
+    def reset(self):
+        self.ambulance = {
             "zombie": 0,
             "injured": 0,
             "healthy": 0
         }
-        self.__scorekeeper = {
+        self.scorekeeper = {
             "killed": 0,
             "saved": 0,
         }
-        self.__capacity = capacity
-        self.remaining_time = int(shift_len)  # minutes
+        self.actions = 4
+        self.remaining_time = int(self.shift_len)  # minutes
 
     def save(self, humanoid):
         self.remaining_time -= ActionCost.SAVE.value
         if humanoid.is_zombie():
-            self.__ambulance["zombie"] += 1
+            self.ambulance["zombie"] += 1
         elif humanoid.is_injured():
-            self.__ambulance["injured"] += 1
+            self.ambulance["injured"] += 1
         else:
-            self.__ambulance["healthy"] += 1
+            self.ambulance["healthy"] += 1
 
     def squish(self, humanoid):
         self.remaining_time -= ActionCost.SQUISH.value
-        if not humanoid.is_zombie():
-            self.__scorekeeper["killed"] += 1
+        if not (humanoid.is_zombie() or humanoid.is_corpse()):
+            self.scorekeeper["killed"] += 1
 
     def skip(self, humanoid):
         self.remaining_time -= ActionCost.SKIP.value
         if humanoid.is_injured():
-            self.__scorekeeper["killed"] += 1
+            self.scorekeeper["killed"] += 1
 
     def scram(self):
         self.remaining_time -= ActionCost.SCRAM.value
-        if self.__ambulance["zombie"] > 0:
-            self.__scorekeeper["killed"] += self.__ambulance["injured"] + self.__ambulance["healthy"]
+        if self.ambulance["zombie"] > 0:
+            self.scorekeeper["killed"] += self.ambulance["injured"] + self.ambulance["healthy"]
         else:
-            self.__scorekeeper["saved"] += self.__ambulance["injured"] + self.__ambulance["healthy"]
+            self.scorekeeper["saved"] += self.ambulance["injured"] + self.ambulance["healthy"]
 
-        self.__ambulance["zombie"] = 0
-        self.__ambulance["injured"] = 0
-        self.__ambulance["healthy"] = 0
+        self.ambulance["zombie"] = 0
+        self.ambulance["injured"] = 0
+        self.ambulance["healthy"] = 0
+    
+    def available_action_space(self) -> bool:
+        action_dict = {s.value:True for s in ActionState}
+        if self.remaining_time <= 0:
+            action_dict['save'] = False
+            action_dict['squish'] = False
+            action_dict['skip'] = False
+        if self.at_capacity():
+            action_dict['save'] - False
+        return [action_dict[s.value] for s in ActionState]
+        
+    # do_action or return false if not possible
+    def map_do_action(self, idx, humanoid) -> bool:
+        if idx == 0:
+            if self.remaining_time <= 0 or self.at_capacity():
+                return False
+            self.save(humanoid)
+        elif idx == 1:
+            if self.remaining_time <= 0:
+                return False
+            self.squish(humanoid)
+        elif idx == 2:
+            if self.remaining_time <= 0:
+                return False
+            self.skip(humanoid)
+        elif idx == 3:
+            self.scram()
+        else:
+            raise ValueError("action index range exceeded")
+        return True
+        
+    def get_cumulative_reward(self):
+        killed = self.scorekeeper["killed"]
+        saved = self.scorekeeper["saved"] 
+        if self.ambulance["zombie"] > 0:
+            killed += self.ambulance["injured"] + self.ambulance["healthy"]
+        else:
+            saved += self.ambulance["injured"] + self.ambulance["healthy"]
+        return saved - killed
 
     def get_current_capacity(self):
-        return sum(self.__ambulance.values())
+        return sum(self.ambulance.values())
 
     def at_capacity(self):
-        return sum(self.__ambulance.values()) >= self.__capacity
+        return sum(self.ambulance.values()) >= self.capacity
 
     def get_score(self):
         self.scram()
-        return self.__scorekeeper
+        return self.scorekeeper
+    
+    @staticmethod
+    def get_action_idx(class_string):
+        return MAP_ACTION_STR_TO_INT[class_string]
+    
+    @staticmethod
+    def get_action_string(class_idx):
+        return MAP_ACTION_INT_TO_STR[class_idx]
+    
+    @staticmethod
+    def get_all_actions():
+        return MAP_ACTION_INT_TO_STR

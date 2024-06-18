@@ -7,7 +7,12 @@ class State(Enum):
     INJURED = "injured"
     CORPSE = "corpse"
 
-
+class ActionState(Enum):
+    SAVE = 'save'
+    SQUISH = 'squish'
+    SKIP = 'skip'
+    SCRAM = 'scram'
+    
 class ActionCost(Enum):
     SAVE = 30
     SQUISH = 5

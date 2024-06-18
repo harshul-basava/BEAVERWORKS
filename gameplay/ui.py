@@ -3,14 +3,14 @@ import tkinter as tk
 from ui_elements.button_menu import ButtonMenu
 from ui_elements.capacity_meter import CapacityMeter
 from ui_elements.clock import Clock
-from endpoints.machine_interface import MachineInterface
+from endpoints.heuristic_interface import HeuristicInterface
 from ui_elements.game_viewer import GameViewer
 from ui_elements.machine_menu import MachineMenu
 from os.path import join
 
 
 class UI(object):
-    def __init__(self, data_parser, scorekeeper, data_fp, is_disable):
+    def __init__(self, data_parser, scorekeeper, data_fp, suggest):
         #  Base window setup
         capacity = 10
         w, h = 1280, 800
@@ -20,8 +20,8 @@ class UI(object):
         self.root.resizable(False, False)
 
         self.humanoid = data_parser.get_random()
-        if not is_disable:
-            self.machine_interface = MachineInterface(self.root, w, h)
+        if suggest:
+            self.machine_interface = HeuristicInterface(self.root, w, h)
 
         #  Add buttons and logo
         user_buttons = [("Skip", lambda: [scorekeeper.skip(self.humanoid),
@@ -50,7 +50,7 @@ class UI(object):
                                                scorekeeper)])]
         self.button_menu = ButtonMenu(self.root, user_buttons)
 
-        if not is_disable:
+        if suggest:
             machine_buttons = [("Suggest", lambda: [self.machine_interface.suggest(self.humanoid)]),
                                ("Act", lambda: [self.machine_interface.act(scorekeeper, self.humanoid),
                                                 self.update_ui(scorekeeper),

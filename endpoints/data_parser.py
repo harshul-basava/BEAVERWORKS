@@ -9,12 +9,18 @@ class DataParser(object):
     """
     Parses the input data photos and assigns their file locations to a dictionary for later access
     """
-    def __init__(self, data_fp, num_data=50):
+    def __init__(self, data_fp):
         metadata_fp = os.path.join(data_fp, "consolidated_metadata.csv")
         self.fp = data_fp
         self.df  = pd.read_csv(metadata_fp)
+        
+
         self.unvisited = self.df.index.to_list()
         self.visited = []
+    def reset(self):
+        self.unvisited = self.df.index.to_list()
+        self.visited = []
+        
     def get_random(self):
         if len(self.unvisited) == 0:
             raise ValueError("No humanoids remain")
