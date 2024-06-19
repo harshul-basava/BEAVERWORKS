@@ -10,7 +10,7 @@ from os.path import join
 
 
 class UI(object):
-    def __init__(self, data_parser, scorekeeper, data_fp, suggest):
+    def __init__(self, data_parser, scorekeeper, data_fp, suggest, log):
         #  Base window setup
         capacity = 10
         w, h = 1280, 800
@@ -20,6 +20,8 @@ class UI(object):
         self.root.resizable(False, False)
 
         self.humanoid = data_parser.get_random()
+        
+        self.log = log
         if suggest:
             self.machine_interface = HeuristicInterface(self.root, w, h)
 
@@ -42,7 +44,7 @@ class UI(object):
                                               data_fp,
                                               data_parser,
                                               scorekeeper)]),
-                        ("Scram", lambda: [scorekeeper.scram(),
+                        ("Scram", lambda: [scorekeeper.scram(self.humanoid),
                                            self.update_ui(scorekeeper),
                                            self.get_next(
                                                data_fp,
@@ -90,6 +92,8 @@ class UI(object):
 
         # Ran out of humanoids? Disable skip/save/squish
         if remaining == 0 or scorekeeper.remaining_time <= 0:
+            if self.log:
+                scorekeeper.save_log()
             self.capacity_meter.update_fill(0)
             self.game_viewer.delete_photo(None)
             self.game_viewer.display_score(scorekeeper.get_score())

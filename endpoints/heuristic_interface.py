@@ -91,7 +91,7 @@ class HeuristicInterface(object):
         elif action == ActionCost.SAVE.name:
             scorekeeper.save(humanoid)
         elif action == ActionCost.SCRAM.name:
-            scorekeeper.scram()
+            scorekeeper.scram(humanoid)
         else:
             raise ValueError("Invalid action suggested")
 
