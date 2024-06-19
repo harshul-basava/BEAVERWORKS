@@ -11,7 +11,7 @@ from gameplay.enums import ActionCost, State
 from gameplay.scorekeeper import ScoreKeeper
 from gameplay.humanoid import Humanoid
 
-from models.PPO import ActorCritic
+from models.PPO import ActorCritic, PPO
 from endpoints.heuristic_interface import Predictor
 
 from gym import Env, spaces
@@ -36,20 +36,21 @@ class RLPredictor(object):
             warnings.warn("Model not loaded, resorting to random prediction")
     def _load_model(self, weights_path, num_classes=4):
         try:
-            self.net = ActorCritic(num_classes)
-            self.net.load_state_dict(torch.load(weights_path))
+            self.net = PPO(0,0,0,0,0,False,0.6)
+            self.net.load(weights_path)
             return True
-        except:  # file not found, maybe others?
+        except Exception as e:  # file not found, maybe others?
+            print(e)
             return False
     def get_action(self, observation_space):
         if self.is_model_loaded:
-            action, _. _ = self.net(observation_space)
+            action = self.net.select_action(observation_space)
         else:
             action = np.random.randint(0, self.actions)
         return action
     
 class InferInterface(Env):
-    def __init__(self, root, w, h, data_parser, scorekeeper, classifier_model_file=os.path.join('models', 'baseline.pth'), rl_model_file=os.path.join('models', 'baseline.pth'), img_data_root='data', display=False, ):
+    def __init__(self, root, w, h, data_parser, scorekeeper, classifier_model_file=os.path.join('models', 'baseline.pth'), rl_model_file=os.path.join('models', 'baselineRL.pth'), img_data_root='data', display=False, ):
         self.img_data_root = img_data_root
         self.data_parser = data_parser
         self.scorekeeper = scorekeeper
@@ -92,7 +93,6 @@ class InferInterface(Env):
         self.previous_cum_reward = 0
         self.data_parser.reset()
         self.scorekeeper.reset()
-        self.get_humanoid()
         return self.observation_space
     
     def get_observation_space(self):
@@ -101,6 +101,7 @@ class InferInterface(Env):
                                                         sum(self.scorekeeper.ambulance.values()),
                                                         ])
         self.observation_space["doable_actions"] = self.scorekeeper.available_action_space()
+        return self.observation_space
     
     def act(self, humanoid):
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
@@ -110,7 +111,7 @@ class InferInterface(Env):
         action_idx = self.action_predictor.get_action(self.get_observation_space())
         action = ScoreKeeper.get_action_string(action_idx)
         
-        self.scorekeeper.map_do_action(action_idx, self.humanoid)
+        self.scorekeeper.map_do_action(action_idx, humanoid)
         if action == "save":
             self.observation_space["vehicle_storage_class_probs"][self.scorekeeper.get_current_capacity()-1] = humanoid_probs
         elif action == "scram":

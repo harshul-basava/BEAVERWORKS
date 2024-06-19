@@ -26,7 +26,7 @@ class Main(object):
             simon = HeuristicInterface(None, None, None, display = False)
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
-                    pass
+                    break
                 else:
                     humanoid = self.data_parser.get_random()
                     simon.suggest(humanoid)
@@ -39,14 +39,14 @@ class Main(object):
             env = TrainInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
             train(env)
         elif mode == 'infer':  # RL training script
-            env = InferInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
-            while len(self.data_parser.unvisited) > 0:
-                if self.scorekeeper.remaining_time <= 0:
-                    pass
+            simon = InferInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
+            while len(simon.data_parser.unvisited) > 0:
+                if simon.scorekeeper.remaining_time <= 0:
+                    break
                 else:
                     humanoid = self.data_parser.get_random()
-                    simon.suggest(humanoid)
-                    simon.act(self.scorekeeper, humanoid)
+                    simon.act(humanoid)
+            self.scorekeeper = simon.scorekeeper
             if log:
                 self.scorekeeper.save_log()
             print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())
@@ -60,7 +60,7 @@ if __name__ == "__main__":
         prog='python3 main.py',
         description='What the program does',
         epilog='Text at the bottom of help')
-    parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train'],)
+    parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer'],)
     parser.add_argument('-l', '--log', type=bool, default = False)
     # parser.add_argument('-a', '--automode', action='store_true', help='No UI, run autonomously with model suggestions')
     # parser.add_argument('-d', '--disable', action='store_true', help='Disable model help')

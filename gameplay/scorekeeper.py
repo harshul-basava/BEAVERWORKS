@@ -5,7 +5,7 @@ MAP_ACTION_STR_TO_INT = {s.value:i for i,s in enumerate(ActionState)}
 MAP_ACTION_INT_TO_STR = [s.value for s in ActionState]
 
 class ScoreKeeper(object):
-    def __init__(self, shift_len, capacity, log):
+    def __init__(self, shift_len, capacity):
         
         self.shift_len = int(shift_len)  # minutes
         self.capacity = capacity
@@ -77,8 +77,9 @@ class ScoreKeeper(object):
         if humanoid.is_injured():
             self.scorekeeper["killed"] += 1
 
-    def scram(self, humanoid):
-        self.log(humanoid, 'scram')
+    def scram(self, humanoid = None):
+        if humanoid:
+            self.log(humanoid, 'scram')
         
         self.remaining_time -= ActionCost.SCRAM.value
         if self.ambulance["zombie"] > 0:
@@ -115,7 +116,7 @@ class ScoreKeeper(object):
                 return False
             self.skip(humanoid)
         elif idx == 3:
-            self.scram()
+            self.scram(humanoid)
         else:
             raise ValueError("action index range exceeded")
         return True
