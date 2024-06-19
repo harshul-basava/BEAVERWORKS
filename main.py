@@ -22,7 +22,8 @@ class Main(object):
         capacity = 10
         self.scorekeeper = ScoreKeeper(shift_length, capacity)
 
-        if mode == 'heuristic':   # Run in background until all humanoids are processed 
+        if mode == 'heuristic':   # Run in background until all humanoids are processed
+            # TODO investigate why this just kills everything until time runs out
             simon = HeuristicInterface(None, None, None, display = False)
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:

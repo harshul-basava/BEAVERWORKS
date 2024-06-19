@@ -15,10 +15,7 @@ import warnings
 
 
 class Predictor(object):
-    def __init__(self,
-                 classes = 4, 
-                 model_file=os.path.join('models', 'baseline.pth'),
-                 img_data_root='./data'):
+    def __init__(self, classes=4, model_file=os.path.join('models', 'default.pth')):
         self.classes = classes
         self.net = None
         self.device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
@@ -29,6 +26,7 @@ class Predictor(object):
         self.is_model_loaded: bool = self._load_model(model_file)
         if not self.is_model_loaded:
             warnings.warn("Model not loaded, resorting to random prediction")
+
     def _load_model(self, weights_path, num_classes=4):
         try:
             self.net = DefaultCNN(num_classes)
@@ -37,16 +35,18 @@ class Predictor(object):
         except Exception as e:  # file not found, maybe others?
             print(e)
             return False
+
     def get_probs(self, img_):
         if self.is_model_loaded:
             img_ = self.transforms(img_).float().unsqueeze(0).to(self.device)
             with torch.no_grad():
                 outputs = self.net(img_)
-                probs = torch.nn.functional.softmax(outputs,1)[0].cpu().numpy()
+                probs = torch.nn.functional.softmax(outputs, 1)[0].cpu().numpy()
         else:
             probs = np.ones(self.classes) / self.classes
         return probs
-    
+
+
 class HeuristicInterface(object):
     def __init__(self, root, w, h, display=False, model_file=os.path.join('models', 'baseline.pth'),
                  img_data_root='data'):
@@ -55,7 +55,7 @@ class HeuristicInterface(object):
         self.img_data_root = img_data_root
 
         # load 
-        self.predictor = Predictor(model_file)
+        self.predictor = Predictor(model_file=model_file)
 
         if self.display:
             self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.1 * h))
@@ -103,7 +103,7 @@ class HeuristicInterface(object):
     def get_model_suggestion(self, humanoid, is_capacity_full) -> ActionCost:
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
         probs: np.ndarray = self.predictor.get_probs(img_)
-        
+
         predicted_ind: int = np.argmax(probs, 0)
         class_string = Humanoid.get_all_states()[predicted_ind]
         predicted_state = State(class_string)
