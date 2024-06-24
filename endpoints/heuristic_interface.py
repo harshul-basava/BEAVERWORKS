@@ -32,7 +32,8 @@ class Predictor(object):
             self.net = DefaultCNN(num_classes)
             self.net.load_state_dict(torch.load(weights_path))
             return True
-        except:  # file not found, maybe others?
+        except Exception as e:  # file not found, maybe others?
+            print(e)
             return False
 
     def get_probs(self, img_):
@@ -47,7 +48,7 @@ class Predictor(object):
 
 
 class HeuristicInterface(object):
-    def __init__(self, root, w, h, display=True, model_file=os.path.join('models', 'default.pth'),
+    def __init__(self, root, w, h, display=False, model_file=os.path.join('models', 'baseline.pth'),
                  img_data_root='data'):
         self.text = ""
         self.display = display
@@ -91,7 +92,7 @@ class HeuristicInterface(object):
         elif action == ActionCost.SAVE.name:
             scorekeeper.save(humanoid)
         elif action == ActionCost.SCRAM.name:
-            scorekeeper.scram()
+            scorekeeper.scram(humanoid)
         else:
             raise ValueError("Invalid action suggested")
 

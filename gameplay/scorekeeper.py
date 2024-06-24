@@ -1,12 +1,20 @@
 from gameplay.enums import ActionCost, ActionState
+import pandas as pd
 
 MAP_ACTION_STR_TO_INT = {s.value:i for i,s in enumerate(ActionState)}
 MAP_ACTION_INT_TO_STR = [s.value for s in ActionState]
 
 class ScoreKeeper(object):
     def __init__(self, shift_len, capacity):
+        
         self.shift_len = int(shift_len)  # minutes
         self.capacity = capacity
+        
+        self.actions = 4
+        
+        self.logger = []
+        self.all_logs = []
+        
         self.reset()
         
     def reset(self):
@@ -19,10 +27,34 @@ class ScoreKeeper(object):
             "killed": 0,
             "saved": 0,
         }
-        self.actions = 4
         self.remaining_time = int(self.shift_len)  # minutes
+        
+        self.all_logs.append(self.logger)
+        self.logger = []
+    
+    def log(self, humanoid, action):
+        self.logger.append({"humanoid_class":humanoid.state,
+                            "humanoid_fp":humanoid.fp,
+                            "action":action,
+                            "remaining_time":self.remaining_time,
+                            "capacity":self.get_current_capacity(),
+                            })
+        
+    def save_log(self,):
+        if len(self.logger) > 0:
+            self.all_logs.append(self.logger)
+        logs = []
+        for i, log in enumerate(self.all_logs):
+            log = pd.DataFrame(log)
+            log['local_run_id'] = i
+            logs.append(log)
+        logs = pd.DataFrame(logs)
+        logs.to_csv('log.csv')
+        
 
     def save(self, humanoid):
+        self.log(humanoid, 'save')
+        
         self.remaining_time -= ActionCost.SAVE.value
         if humanoid.is_zombie():
             self.ambulance["zombie"] += 1
@@ -32,16 +64,23 @@ class ScoreKeeper(object):
             self.ambulance["healthy"] += 1
 
     def squish(self, humanoid):
+        self.log(humanoid, 'squish')
+        
         self.remaining_time -= ActionCost.SQUISH.value
         if not (humanoid.is_zombie() or humanoid.is_corpse()):
             self.scorekeeper["killed"] += 1
 
     def skip(self, humanoid):
+        self.log(humanoid, 'skip')
+        
         self.remaining_time -= ActionCost.SKIP.value
         if humanoid.is_injured():
             self.scorekeeper["killed"] += 1
 
-    def scram(self):
+    def scram(self, humanoid = None):
+        if humanoid:
+            self.log(humanoid, 'scram')
+        
         self.remaining_time -= ActionCost.SCRAM.value
         if self.ambulance["zombie"] > 0:
             self.scorekeeper["killed"] += self.ambulance["injured"] + self.ambulance["healthy"]
@@ -52,7 +91,7 @@ class ScoreKeeper(object):
         self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
     
-    def available_action_space(self) -> bool:
+    def available_action_space(self):
         action_dict = {s.value:True for s in ActionState}
         if self.remaining_time <= 0:
             action_dict['save'] = False
@@ -77,7 +116,7 @@ class ScoreKeeper(object):
                 return False
             self.skip(humanoid)
         elif idx == 3:
-            self.scram()
+            self.scram(humanoid)
         else:
             raise ValueError("action index range exceeded")
         return True
