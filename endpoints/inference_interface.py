@@ -51,6 +51,13 @@ class RLPredictor(object):
     
 class InferInterface(Env):
     def __init__(self, root, w, h, data_parser, scorekeeper, classifier_model_file=os.path.join('models', 'baseline.pth'), rl_model_file=os.path.join('models', 'baselineRL.pth'), img_data_root='data', display=False, ):
+        """
+        initializes RL training interface
+        
+        dataparser : stores humanoid information needed to retreive humanoid images and rewards
+        scorekeeper : keeps track of actions being done on humanoids, score, and is needed for reward calculations
+        classifier_model_file : backbone model weights used in RL observation state
+        """
         self.img_data_root = img_data_root
         self.data_parser = data_parser
         self.scorekeeper = scorekeeper
@@ -85,6 +92,10 @@ class InferInterface(Env):
             self.suggestion.pack(side=tk.TOP)
             
     def reset(self):
+        """
+        resets game for a new episode to run.
+        returns observation space
+        """
         self.observation_space = {"variables": np.zeros(3),
                                   "vehicle_storage_class_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes'])),
                                     "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
@@ -96,6 +107,9 @@ class InferInterface(Env):
         return self.observation_space
     
     def get_observation_space(self):
+        """
+        updates the observation space
+        """
         self.observation_space['variables'] = np.array([self.scorekeeper.remaining_time, 
                                                         self.previous_cum_reward,
                                                         sum(self.scorekeeper.ambulance.values()),
@@ -104,6 +118,11 @@ class InferInterface(Env):
         return self.observation_space
     
     def act(self, humanoid):
+        """
+        Acts on the environment according the the humanoid given and its observation state
+        
+        humanoid : the humanoid being presented
+        """
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
         humanoid_probs = self.prob_predictor.get_probs(img_)
         self.observation_space["humanoid_class_probs"] = humanoid_probs
@@ -118,6 +137,11 @@ class InferInterface(Env):
             self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes']))
     
     def suggest(self, humanoid):
+        """
+        Suggests an action on the environment according the the humanoid given and its observation state
+        
+        humanoid : the humanoid being presented
+        """
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
         humanoid_probs = self.prob_predictor.get_probs(img_)
         self.observation_space["humanoid_class_probs"] = humanoid_probs

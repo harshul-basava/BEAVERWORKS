@@ -18,6 +18,9 @@ class ScoreKeeper(object):
         self.reset()
         
     def reset(self):
+        """
+        resets scorekeeper on new environment
+        """
         self.ambulance = {
             "zombie": 0,
             "injured": 0,
@@ -33,6 +36,12 @@ class ScoreKeeper(object):
         self.logger = []
     
     def log(self, humanoid, action):
+        """
+        logs current action taken against a humanoid
+        
+        humanoid : the humanoid presented
+        action : the action taken
+        """
         self.logger.append({"humanoid_class":humanoid.state,
                             "humanoid_fp":humanoid.fp,
                             "action":action,
@@ -41,6 +50,10 @@ class ScoreKeeper(object):
                             })
         
     def save_log(self,):
+        """
+        Saves a single log.csv file containing the actions that were taken,and the humanoids presented at the time. 
+        Note: will overwrite previous logs
+        """
         if len(self.logger) > 0:
             self.all_logs.append(self.logger)
         logs = []
@@ -53,6 +66,10 @@ class ScoreKeeper(object):
         
 
     def save(self, humanoid):
+        """
+        saves the humanoid
+        updates scorekeeper
+        """
         self.log(humanoid, 'save')
         
         self.remaining_time -= ActionCost.SAVE.value
@@ -64,6 +81,10 @@ class ScoreKeeper(object):
             self.ambulance["healthy"] += 1
 
     def squish(self, humanoid):
+        """
+        squishes the humanoid
+        updates scorekeeper
+        """
         self.log(humanoid, 'squish')
         
         self.remaining_time -= ActionCost.SQUISH.value
@@ -71,6 +92,10 @@ class ScoreKeeper(object):
             self.scorekeeper["killed"] += 1
 
     def skip(self, humanoid):
+        """
+        skips the humanoid
+        updates scorekeeper
+        """
         self.log(humanoid, 'skip')
         
         self.remaining_time -= ActionCost.SKIP.value
@@ -78,6 +103,10 @@ class ScoreKeeper(object):
             self.scorekeeper["killed"] += 1
 
     def scram(self, humanoid = None):
+        """
+        scrams
+        updates scorekeeper
+        """
         if humanoid:
             self.log(humanoid, 'scram')
         
@@ -92,6 +121,9 @@ class ScoreKeeper(object):
         self.ambulance["healthy"] = 0
     
     def available_action_space(self):
+        """
+        returns available action space as a list of bools
+        """
         action_dict = {s.value:True for s in ActionState}
         if self.remaining_time <= 0:
             action_dict['save'] = False
@@ -102,7 +134,12 @@ class ScoreKeeper(object):
         return [action_dict[s.value] for s in ActionState]
         
     # do_action or return false if not possible
-    def map_do_action(self, idx, humanoid) -> bool:
+    def map_do_action(self, idx, humanoid):
+        """
+        does an action on a humanoid. Intended for RL use.
+        
+        idx : the action index 
+        """
         if idx == 0:
             if self.remaining_time <= 0 or self.at_capacity():
                 return False
@@ -122,6 +159,10 @@ class ScoreKeeper(object):
         return True
         
     def get_cumulative_reward(self):
+        """
+        returns cumulative reward (current score)
+        Note: the score can be denoted as anything, not set in stone
+        """
         killed = self.scorekeeper["killed"]
         saved = self.scorekeeper["saved"] 
         if self.ambulance["zombie"] > 0:

@@ -19,6 +19,13 @@ from endpoints.data_parser import DataParser
 
 class TrainInterface(Env):
     def __init__(self, root, w, h, data_parser, scorekeeper, classifier_model_file=os.path.join('models', 'baseline.pth'), img_data_root='data', display=False, ):
+        """
+        initializes RL training interface
+        
+        dataparser : stores humanoid information needed to retreive humanoid images and rewards
+        scorekeeper : keeps track of actions being done on humanoids, score, and is needed for reward calculations
+        classifier_model_file : backbone model weights used in RL observation state
+        """
         self.img_data_root = img_data_root
         self.data_parser = data_parser
         self.scorekeeper = scorekeeper
@@ -52,6 +59,10 @@ class TrainInterface(Env):
             self.suggestion.pack(side=tk.TOP)
             
     def reset(self):
+        """
+        resets game for a new episode to run.
+        returns observation space
+        """
         self.observation_space = {"variables": np.zeros(3),
                                   "vehicle_storage_class_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes'])),
                                     "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
@@ -64,11 +75,17 @@ class TrainInterface(Env):
         return self.observation_space
     
     def get_humanoid(self):
+        """
+        gets a random humanoid from the dataparser
+        """
         self.humanoid = self.data_parser.get_random()
         img_ = Image.open(os.path.join(self.img_data_root, self.humanoid.fp))
         self.humanoid_probs = self.predictor.get_probs(img_) 
     
     def get_observation_space(self):
+        """
+        updates the observation space
+        """
         self.observation_space['variables'] = np.array([self.scorekeeper.remaining_time, 
                                                         self.previous_cum_reward,
                                                         sum(self.scorekeeper.ambulance.values()),
@@ -77,6 +94,11 @@ class TrainInterface(Env):
         self.observation_space["humanoid_class_probs"] = self.humanoid_probs
         
     def step(self, action_idx):
+        """
+        Acts on the environment and returns the observation state, reward, etc.
+        
+        action_idx : the index of the action being taken
+        """
         action = ScoreKeeper.get_action_string(action_idx)
         
         reward=0
