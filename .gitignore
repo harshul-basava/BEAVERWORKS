@@ -216,3 +216,6 @@ temp/
 
 # Data files are large
 large_data_files
+
+# jupyter checkpoints
+.ipynb_checkpoints
