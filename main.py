@@ -7,6 +7,7 @@ from endpoints.inference_interface import InferInterface
 
 from gameplay.scorekeeper import ScoreKeeper
 from gameplay.ui import UI
+from gameplay.enums import ActionCost
 from model_training.rl_training import train
 
 
@@ -23,15 +24,25 @@ class Main(object):
         self.scorekeeper = ScoreKeeper(shift_length, capacity)
 
         if mode == 'heuristic':   # Run in background until all humanoids are processed
-            # TODO investigate why this just kills everything until time runs out
+            # TODO investigate why this just kills everything (follow humanoid to prediction to actions to scorekeeper)
             simon = HeuristicInterface(None, None, None, display = False)
             while len(self.data_parser.unvisited) > 0:
                 if self.scorekeeper.remaining_time <= 0:
+                    print('Ran out of time')
                     break
                 else:
                     humanoid = self.data_parser.get_random()
-                    simon.suggest(humanoid)
-                    simon.act(self.scorekeeper, humanoid)
+                    action = simon.get_model_suggestion(humanoid, self.scorekeeper.at_capacity())
+                    if action == ActionCost.SKIP:
+                        self.scorekeeper.skip(humanoid)
+                    elif action == ActionCost.SQUISH:
+                        self.scorekeeper.squish(humanoid)
+                    elif action == ActionCost.SAVE:
+                        self.scorekeeper.save(humanoid)
+                    elif action == ActionCost.SCRAM:
+                        self.scorekeeper.scram(humanoid)
+                    else:
+                        raise ValueError("Invalid action suggested")
             if log:
                 self.scorekeeper.save_log()
             print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())

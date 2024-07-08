@@ -84,6 +84,7 @@ class HeuristicInterface(object):
             self.suggestion.config(text=self.text)
 
     def act(self, scorekeeper, humanoid):
+        self.suggest(humanoid, scorekeeper.at_capacity())
         action = self.text
         if action == ActionCost.SKIP.name:
             scorekeeper.skip(humanoid)
