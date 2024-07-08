@@ -15,7 +15,7 @@ import warnings
 
 
 class Predictor(object):
-    def __init__(self, classes=4, model_file=os.path.join('models', 'default.pth')):
+    def __init__(self, classes=4, model_file=os.path.join('models', 'baseline.pth')):
         self.classes = classes
         self.net = None
         self.device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
