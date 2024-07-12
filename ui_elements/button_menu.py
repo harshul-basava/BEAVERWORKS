@@ -19,11 +19,17 @@ class ButtonMenu(object):
         #  Not enough time left? Disable action
         if (remaining_time - ActionCost.SCRAM.value) < ActionCost.SKIP.value:
             self.buttons[0].config(state="disabled")
+        else:
+            self.buttons[0].config(state="normal")
         if (remaining_time - ActionCost.SCRAM.value) < ActionCost.SQUISH.value:
             self.buttons[1].config(state="disabled")
+        else:
+            self.buttons[1].config(state="normal")
         if (remaining_time - ActionCost.SCRAM.value) < ActionCost.SAVE.value:
             self.buttons[2].config(state="disabled")
-        if at_capacity:
+        else:
+            self.buttons[2].config(state="normal")
+        if at_capacity or (remaining_time - ActionCost.SCRAM.value) <= 0:
             self.buttons[0].config(state="disabled")
             self.buttons[1].config(state="disabled")
             self.buttons[2].config(state="disabled")
