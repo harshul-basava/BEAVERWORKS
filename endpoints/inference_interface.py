@@ -127,7 +127,7 @@ class InferInterface(Env):
         if pred:
             humanoid_probs = self.prob_predictor.get_probs(img_)
         else:
-            humanoid_probs = oracle(humanoid)
+            humanoid_probs = oracle(humanoid)  # getting the exact class of the humanoid in the probs
         self.observation_space["humanoid_class_probs"] = humanoid_probs
         
         action_idx = self.action_predictor.get_action(self.get_observation_space())
@@ -154,6 +154,7 @@ class InferInterface(Env):
         return action
 
 
+# Takes a humanoid as input and returns its class in the form of a list of probabilities
 def oracle(humanoid):
     if humanoid.is_zombie():
         return [1.0, 0.0, 0.0, 0.0]

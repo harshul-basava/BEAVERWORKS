@@ -84,7 +84,7 @@ class TrainInterface(Env):
         if pred:
             self.humanoid_probs = self.predictor.get_probs(img_)
         else:
-            self.humanoid_probs = oracle(self.humanoid)
+            self.humanoid_probs = oracle(self.humanoid)  # getting the exact class of the humanoid in the probs
     
     def get_observation_space(self):
         """
