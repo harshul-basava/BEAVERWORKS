@@ -48,7 +48,7 @@ class RLPredictor(object):
         else:
             action = np.random.randint(0, self.actions)
         return action
-    
+
 class InferInterface(Env):
     def __init__(self, root, w, h, data_parser, scorekeeper, classifier_model_file=os.path.join('models', 'baseline.pth'), rl_model_file=os.path.join('models', 'baselineRL.pth'), img_data_root='data', display=False, ):
         """
@@ -117,14 +117,17 @@ class InferInterface(Env):
         self.observation_space["doable_actions"] = self.scorekeeper.available_action_space()
         return self.observation_space
     
-    def act(self, humanoid):
+    def act(self, humanoid, pred=True):
         """
         Acts on the environment according the the humanoid given and its observation state
         
         humanoid : the humanoid being presented
         """
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
-        humanoid_probs = self.prob_predictor.get_probs(img_)
+        if pred:
+            humanoid_probs = self.prob_predictor.get_probs(img_)
+        else:
+            humanoid_probs = oracle(humanoid)
         self.observation_space["humanoid_class_probs"] = humanoid_probs
         
         action_idx = self.action_predictor.get_action(self.get_observation_space())
@@ -149,3 +152,17 @@ class InferInterface(Env):
         action_idx = self.action_predictor.get_action(self.get_observation_space())
         action = ScoreKeeper.get_action_string(action_idx)
         return action
+
+
+def oracle(humanoid):
+    if humanoid.is_zombie():
+        return [1.0, 0.0, 0.0, 0.0]
+    elif humanoid.is_injured():
+        return [0.0, 0.0, 1.0, 0.0]
+    elif humanoid.is_healthy():
+        return [0.0, 1.0, 0.0, 0.0]
+    elif humanoid.is_corpse():
+        return [0.0, 0.0, 0.0, 1.0]
+    else:
+        return [0.25, 0.25, 0.25, 0.25]
+
