@@ -1,17 +1,28 @@
 from gameplay.enums import State
+import random
 
 MAP_CLASS_STR_TO_INT = {s.value:i for i,s in enumerate(State)}
 MAP_CLASS_INT_TO_STR = [s.value for s in State]
 
 class Humanoid(object):
     """
-    Are they a human or a zombie???
+    Are they a human or a zombie??? What probability?
     """
     
-    def __init__(self, fp, state, value = 0):
+    def __init__(self, fp, job_probs):
         self.fp = fp
-        self.state = state
-        # self.value = value
+        self.probability = job_probs  # probability is a dictionary of floats (0-1) representing probabilities of each job class
+        self.state = self.assign_class(job_probs)
+
+    # returns a job class based on assigned probabilities
+    def assign_class(self, job_probs):
+        rand_num = random.random()
+        total = 0.0
+        for job, prob in job_probs.items():
+            total+=prob
+            if rand_num <= total:
+                return job
+        return None
 
     def is_zombie(self):
         return self.state == State.ZOMBIE.value
