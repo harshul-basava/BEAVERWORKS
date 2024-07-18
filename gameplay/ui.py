@@ -51,8 +51,16 @@ class UI(object):
                                            self.get_next(
                                                data_fp,
                                                data_parser,
+
                                                scorekeeper)])]
-                        
+
+                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid),
+                                            self.update_ui(scorekeeper),
+                                            self.get_next(
+                                                data_fp, 
+                                                data_parser,
+                                                scorekeeper)])]
+
         self.button_menu = ButtonMenu(self.root, user_buttons)
 
         if suggest:
@@ -88,7 +96,7 @@ class UI(object):
         m = 60 - (scorekeeper.remaining_time % 60)
         self.clock.update_time(h, m)
 
-        self.capacity_meter.update_fill(scorekeeper.get_current_capacity())
+        self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
 
     def on_resize(self, event):
         w, h = 0.6 * self.root.winfo_width(), 0.7 * self.root.winfo_height()
@@ -113,5 +121,4 @@ class UI(object):
 
         # Disable button(s) if options are no longer possible
         self.button_menu.disable_buttons(scorekeeper.remaining_time, remaining, scorekeeper.at_capacity())
-    
-        
+
