@@ -41,6 +41,8 @@ class Main(object):
                         self.scorekeeper.save(humanoid)
                     elif action == ActionCost.SCRAM:
                         self.scorekeeper.scram(humanoid)
+                    elif action == ActionCost.REVEAL:
+                        self.scorekeeper.reveal(humanoid)
                     else:
                         raise ValueError("Invalid action suggested")
             if log:

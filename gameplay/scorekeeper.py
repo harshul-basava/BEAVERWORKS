@@ -119,6 +119,8 @@ class ScoreKeeper(object):
         self.ambulance["zombie"] = 0
         self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
+    def reveal(self, humanoid):
+        ""
     
     def available_action_space(self):
         """
@@ -129,6 +131,7 @@ class ScoreKeeper(object):
             action_dict['save'] = False
             action_dict['squish'] = False
             action_dict['skip'] = False
+            action_dict['reveal'] = False
         if self.at_capacity():
             action_dict['save'] = False
         return [action_dict[s.value] for s in ActionState]
