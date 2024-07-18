@@ -17,8 +17,8 @@ class Probability(object):
             tk.Label(self.canvas, text=type[i], font=("Arial", 10)).place(x=50, y=80 + 30 * i)
             tk.Label(self.canvas, text=prob[i]+"%", font=("Arial", 10)).place(x=140, y=80 + 30 * i)
         return
+
     def update(self, type, prob):
         self.render(type, prob)
         self.canvas.update()
         return
-
