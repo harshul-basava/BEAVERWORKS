@@ -9,7 +9,7 @@ class Humanoid(object):
     Are they a human or a zombie??? What probability?
     """
     
-    def __init__(self, fp, state, job_probs):
+    def __init__(self, fp, state, job_probs=None):
         self.fp = fp
         self.probability = job_probs  # probability is a dictionary of floats (0-1) representing probabilities of each job class
         self.state = state  # human or zombie
@@ -17,12 +17,13 @@ class Humanoid(object):
 
     # returns a job class based on assigned probabilities
     def assign_class(self, job_probs):
-        rand_num = random.random()
-        total = 0.0
-        for job, prob in job_probs.items():
-            total+=prob
-            if rand_num <= total:
-                return job
+        if job_probs is not None:
+            rand_num = random.random()
+            total = 0.0
+            for job, prob in job_probs.items():
+                total+=prob
+                if rand_num <= total:
+                    return job
         return None
 
     def is_zombie(self):
