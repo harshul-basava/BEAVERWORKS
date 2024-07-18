@@ -10,7 +10,7 @@ class GameViewer(object):
         self.canvas = tk.Canvas(root, width=math.floor(0.5 * w), height=math.floor(0.75 * h))
         self.canvas.place(x=300, y=100)
         self.canvas.update()
-
+        
         self.photo = None
         self.create_photo(join(data_fp, humanoid.fp))
 
@@ -22,10 +22,12 @@ class GameViewer(object):
         self.photo = display_photo(fp, self.canvas.winfo_width(), self.canvas.winfo_height())
         self.canvas.create_image(0, 0, anchor=tk.NW, image=self.photo, tags='photo')
 
+        
     def display_score(self, score):
         tk.Label(self.canvas, text="FINAL SCORE", font=("Arial", 30)).pack(anchor=tk.NW)
         tk.Label(self.canvas, text="Killed {}".format(score["killed"]), font=("Arial", 15)).pack(anchor=tk.NW)
         tk.Label(self.canvas, text="Saved {}".format(score["saved"]), font=("Arial", 15)).pack(anchor=tk.NW)
+
 
 
 def display_photo(img_path, w, h):
