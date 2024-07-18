@@ -28,12 +28,14 @@ class CapacityMeter(object):
                 x = 3
                 y += size * 1.5
 
-    def update_fill(self, index):
+    def update_fill(self, index, log=None):
         if index != 0:
             # self.root.itemconfig(self.__units[index-1], fill="midnightblue", activefill='red', stipple="")
             curr = self.__units[index-1]
             curr.config(bg="midnightblue", state="normal", activebackground='midnightblue')  # changing the color of the button and adding tooltip
-            ToolTip(curr, msg="important info")
+
+            if log and log["action"] == "save":
+                ToolTip(curr, msg=log["humanoid_class"])  # displays the class of the humanoid just saved
 
         else:
             for unit in self.__units:
