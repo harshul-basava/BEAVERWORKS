@@ -28,14 +28,16 @@ class CapacityMeter(object):
                 x = 3
                 y += size * 1.5
 
-    def update_fill(self, index, log=None):
+    def update_fill(self, index, log=None, probs=None, jobs=None):
         if index != 0:
             # self.root.itemconfig(self.__units[index-1], fill="midnightblue", activefill='red', stipple="")
             curr = self.__units[index-1]
             curr.config(bg="midnightblue", state="normal", activebackground='midnightblue')  # changing the color of the button and adding tooltip
 
             if log and log["action"] == "save":
-                ToolTip(curr, msg=log["humanoid_class"])  # displays the class of the humanoid just saved
+                probs = log["humanoid_probs"]  # Example: {"Normal": 0.25, "Doctor": 0.25, "Engineer": 0.25, "Time-Wizard": 0.25}
+                jobs = log["humanoid_job"]   # Class Name as a string
+                self.toolTipCreator(curr, probs, jobs)  # create the toolTip
 
         else:
             for unit in self.__units:
@@ -43,6 +45,18 @@ class CapacityMeter(object):
                 unit.config(bg="white", state="disabled", activebackground='white')
                 unit.unbind("<Enter>")  # removing the tooltip from the button when empty
                 unit.unbind("<Leave>")
+
+    def toolTipCreator(self, unit, probability, job):  # assigns the relevant toolTip information
+        if type(job) is str:
+            ToolTip(unit, msg=job)  # displays the job class of the humanoid just saved if known
+        elif type(probability) is dict:
+            msg = ""
+            for k, v in probability.items():
+                msg += f"{k}: {int(100 * v)}%\n"
+            ToolTip(unit, msg=msg.rstrip('\n'))  # displays a list of probabilities
+        else:
+            ToolTip(unit, msg="Error: No class info")
+
 
 
 def create_unit(canvas, x, y, size):
