@@ -52,12 +52,7 @@ class UI(object):
                                                data_fp,
                                                data_parser,
                                                scorekeeper)]),
-                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid),
-                                            self.update_ui(scorekeeper),
-                                            self.get_next(
-                                                data_fp, 
-                                                data_parser,
-                                                scorekeeper)])]
+                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid)])]
 
         self.button_menu = ButtonMenu(self.root, user_buttons)
 
