@@ -51,9 +51,7 @@ class UI(object):
                                            self.get_next(
                                                data_fp,
                                                data_parser,
-
-                                               scorekeeper)])]
-
+                                               scorekeeper)]),
                         ("Reveal", lambda: [scorekeeper.reveal(self.humanoid),
                                             self.update_ui(scorekeeper),
                                             self.get_next(
