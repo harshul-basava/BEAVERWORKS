@@ -10,8 +10,7 @@ class GameViewer(object):
         self.canvas = tk.Canvas(root, width=math.floor(0.5 * w), height=math.floor(0.75 * h))
         self.canvas.place(x=300, y=100)
         self.canvas.update()
-        self.label = None  # Initialize the label reference
-        self.remove_button = None  # Initialize the button reference
+        
         self.photo = None
         self.create_photo(join(data_fp, humanoid.fp))
 
