@@ -19,4 +19,4 @@ class ActionCost(Enum):
     SQUISH = 5
     SKIP = 15
     SCRAM = 120
-    REVEAL = 0
+    REVEAL = 20
