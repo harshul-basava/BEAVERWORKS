@@ -6,6 +6,8 @@ from ui_elements.clock import Clock
 from endpoints.heuristic_interface import HeuristicInterface
 from ui_elements.game_viewer import GameViewer
 from ui_elements.machine_menu import MachineMenu
+from ui_elements.probability import Probability
+
 from os.path import join
 
 
@@ -50,6 +52,7 @@ class UI(object):
                                                data_fp,
                                                data_parser,
                                                scorekeeper)])]
+                        
         self.button_menu = ButtonMenu(self.root, user_buttons)
 
         if suggest:
@@ -70,9 +73,13 @@ class UI(object):
         init_h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
         init_m = 60 - (scorekeeper.remaining_time % 60)
         self.clock = Clock(self.root, w, h, init_h, init_m)
-
+        
         # Display ambulance capacity
         self.capacity_meter = CapacityMeter(self.root, w, h, capacity)
+        
+        # display probabilities
+        self.prob = Probability(self.root, w, h, ['doctor', 'nurse', 'paramedic'], ['33', '33', '33'])
+
 
         self.root.mainloop()
 
@@ -106,3 +113,5 @@ class UI(object):
 
         # Disable button(s) if options are no longer possible
         self.button_menu.disable_buttons(scorekeeper.remaining_time, remaining, scorekeeper.at_capacity())
+    
+        
