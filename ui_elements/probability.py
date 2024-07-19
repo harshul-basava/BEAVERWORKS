@@ -10,7 +10,12 @@ class Probability(object):
         self.canvas.update()
 
 
-
+    def render_Job(self, job):
+        
+        tk.Label(self.canvas, text="Job", font=("Arial", 15)).place(x=80, y=30)
+        tk.Label(self.canvas, text=job, font=("Arial", 15)).place(x=80, y=50)
+        self.canvas.update()
+        return
     def render(self, probs):
 
         tk.Label(self.canvas, text="Probability", font=("Arial", 15)).place(x=80, y=30)
