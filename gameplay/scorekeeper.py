@@ -44,6 +44,8 @@ class ScoreKeeper(object):
         """
         self.logger.append({"humanoid_class":humanoid.state,
                             "humanoid_fp":humanoid.fp,
+                            "humanoid_probs":humanoid.probability,
+                            "humanoid_job":humanoid.job,
                             "action":action,
                             "remaining_time":self.remaining_time,
                             "capacity":self.get_current_capacity(),
