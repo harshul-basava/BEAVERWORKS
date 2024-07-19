@@ -9,6 +9,7 @@ class ScoreKeeper(object):
         
         self.shift_len = int(shift_len)  # minutes
         self.capacity = capacity
+        self.carrying = []
         
         self.actions = 4
         
@@ -73,6 +74,7 @@ class ScoreKeeper(object):
         updates scorekeeper
         """
         self.log(humanoid, 'save')
+        self.carrying.append(humanoid)
         
         self.remaining_time -= ActionCost.SAVE.value
         if humanoid.is_zombie():
@@ -112,6 +114,8 @@ class ScoreKeeper(object):
         if humanoid:
             self.log(humanoid, 'scram')
         
+        self.carrying = []
+
         self.remaining_time -= ActionCost.SCRAM.value
         if self.ambulance["zombie"] > 0:
             self.scorekeeper["killed"] += self.ambulance["injured"] + self.ambulance["healthy"]
