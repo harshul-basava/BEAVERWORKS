@@ -124,7 +124,6 @@ class ScoreKeeper(object):
         ""
         self.log(humanoid, 'reveal')
         self.remaining_time -=ActionCost.REVEAL.value
-        self.probs = Probability.render
     
     def available_action_space(self):
         """

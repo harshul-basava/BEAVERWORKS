@@ -52,7 +52,8 @@ class UI(object):
                                                data_fp,
                                                data_parser,
                                                scorekeeper)]),
-                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid)])]
+                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid), 
+                                            self.update_ui_reveal(scorekeeper)])]
 
         self.button_menu = ButtonMenu(self.root, user_buttons)
 
@@ -91,7 +92,11 @@ class UI(object):
         self.prob.update(self.humanoid.probability)
 
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
-
+    def update_ui_reveal(self, scorekeeper):
+        h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
+        m = 60 - (scorekeeper.remaining_time % 60)
+        self.clock.update_time(h, m)
+       
     def on_resize(self, event):
         w, h = 0.6 * self.root.winfo_width(), 0.7 * self.root.winfo_height()
         self.game_viewer.canvas.config(width=w, height=h)
