@@ -33,31 +33,30 @@ class UI(object):
                                           self.get_next(
                                               data_fp,
                                               data_parser,
-                                              scorekeeper)]),
+                                              scorekeeper), 
+                                            self.prob.update(self.humanoid.probability)]),
                         ("Squish", lambda: [scorekeeper.squish(self.humanoid),
                                             self.update_ui(scorekeeper),
                                             self.get_next(
                                                 data_fp,
                                                 data_parser,
-                                                scorekeeper)]),
+                                                scorekeeper),
+                                                self.prob.update(self.humanoid.probability)]),
                         ("Save", lambda: [scorekeeper.save(self.humanoid),
                                           self.update_ui(scorekeeper),
                                           self.get_next(
                                               data_fp,
                                               data_parser,
-                                              scorekeeper)]),
+                                              scorekeeper),
+                                              self.prob.update(self.humanoid.probability)]),
                         ("Scram", lambda: [scorekeeper.scram(self.humanoid),
                                            self.update_ui(scorekeeper),
                                            self.get_next(
                                                data_fp,
                                                data_parser,
-                                               scorekeeper)]),
-                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid),
-                                            self.update_ui(scorekeeper),
-                                            self.get_next(
-                                                data_fp, 
-                                                data_parser,
-                                                scorekeeper)])]
+                                               scorekeeper),
+                                                self.prob.update(self.humanoid.probability)]),
+                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid)])]
 
         self.button_menu = ButtonMenu(self.root, user_buttons)
 
@@ -68,7 +67,8 @@ class UI(object):
                                                 self.get_next(
                                                     data_fp,
                                                     data_parser,
-                                                    scorekeeper)])]
+                                                    scorekeeper),
+                                                    self.prob.update(self.humanoid.probability)])]
             self.machine_menu = MachineMenu(self.root, machine_buttons)
 
         #  Display central photo
@@ -84,7 +84,7 @@ class UI(object):
         self.capacity_meter = CapacityMeter(self.root, w, h, capacity)
         
         # display probabilities
-        self.prob = Probability(self.root, w, h, ['doctor', 'nurse', 'paramedic'], ['33', '33', '33'])
+        self.prob = Probability(self.root, w, h, self.humanoid.probability)
 
 
         self.root.mainloop()
