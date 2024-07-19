@@ -79,7 +79,7 @@ class UI(object):
         self.capacity_meter = CapacityMeter(self.root, w, h, capacity)
         
         # display probabilities
-        self.prob = Probability(self.root, w, h, ['doctor', 'nurse', 'paramedic'], ['33', '33', '33'])
+        self.prob = Probability(self.root, w, h, self.humanoid.probability)
 
 
         self.root.mainloop()
@@ -88,6 +88,7 @@ class UI(object):
         h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
         m = 60 - (scorekeeper.remaining_time % 60)
         self.clock.update_time(h, m)
+        self.prob.update(self.humanoid.probability)
 
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
 
