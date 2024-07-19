@@ -13,7 +13,7 @@ class Humanoid(object):
         self.fp = fp
         self.probability = self.create_job_probs()  # probability is a dictionary of floats (0-1) representing probabilities of each job class
         self.state = state  # human or zombie
-        self.job = self.assign_class(job_probs)
+        self.job = self.assign_class(self.probability)
     
     # creates probabilities for jobs
     def create_job_probs(self):
@@ -33,7 +33,7 @@ class Humanoid(object):
     # returns a job class based on assigned probabilities
     def assign_class(self, job_probs):
         if job_probs is not None:
-            rand_num = random.random()
+            rand_num = random.randint(0, 100)
             total = 0.0
             for job, prob in job_probs.items():
                 total+=prob

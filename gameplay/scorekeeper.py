@@ -120,7 +120,7 @@ class ScoreKeeper(object):
         self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
     def reveal(self, humanoid):
-        ""
+        print(humanoid.job)
     
     def available_action_space(self):
         """
