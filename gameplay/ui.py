@@ -96,6 +96,7 @@ class UI(object):
         h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
         m = 60 - (scorekeeper.remaining_time % 60)
         self.clock.update_time(h, m)
+        self.prob.render_Job(self.humanoid.job)
        
     def on_resize(self, event):
         w, h = 0.6 * self.root.winfo_width(), 0.7 * self.root.winfo_height()
