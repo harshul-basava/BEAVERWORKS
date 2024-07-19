@@ -1,5 +1,6 @@
 from gameplay.enums import ActionCost, ActionState
 import pandas as pd
+from ui_elements.probability import Probability
 
 MAP_ACTION_STR_TO_INT = {s.value:i for i,s in enumerate(ActionState)}
 MAP_ACTION_INT_TO_STR = [s.value for s in ActionState]
@@ -123,7 +124,7 @@ class ScoreKeeper(object):
         ""
         self.log(humanoid, 'reveal')
         self.remaining_time -=ActionCost.REVEAL.value
-
+        self.probs = Probability.render
     
     def available_action_space(self):
         """
