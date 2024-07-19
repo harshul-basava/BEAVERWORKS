@@ -121,9 +121,10 @@ class ScoreKeeper(object):
         self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
     def reveal(self, humanoid):
-        ""
+        "shows the occupation of the current human/zombie"
         self.log(humanoid, 'reveal')
         self.remaining_time -=ActionCost.REVEAL.value
+        
     
     def available_action_space(self):
         """
