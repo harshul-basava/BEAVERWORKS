@@ -52,7 +52,7 @@ class CapacityMeter(object):
         elif type(probability) is dict:
             msg = ""
             for k, v in probability.items():
-                msg += f"{k}: {int(100 * v)}%\n"
+                msg += f"{k}: {v}%\n"
             ToolTip(unit, msg=msg.rstrip('\n'))  # displays a list of probabilities
         else:
             ToolTip(unit, msg="Error: No class info")
