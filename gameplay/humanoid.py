@@ -20,18 +20,13 @@ class Humanoid(object):
     
     # creates probabilities for jobs
     def create_job_probs(self):
-        probs = {}
-        doctorProb = random.randint(0, 100)
-        engineerProb = random.randint(0, 100-doctorProb)
-        normalProb = random.randint(0,100-doctorProb-engineerProb)
-        thugProb = random.randint(0,100-doctorProb-engineerProb-normalProb)
-        fattyProb = 100-doctorProb-engineerProb-normalProb-thugProb
-        probs['doctor'] = doctorProb
-        probs['engineer'] = engineerProb
-        probs['normal'] = normalProb
-        probs['thug'] = thugProb
-        probs['fatty'] = fattyProb
-        return probs
+        nums = [random.randint(1, 100) for _ in range(5)]
+
+        probs = [round(100 * round(num / sum(nums), 2)) for num in nums]
+        jobs = ['doctor', 'engineer', 'normal', 'thug', 'fatty']
+        random.shuffle(probs)
+
+        return dict(zip(jobs, probs))
 
     # returns a job class based on assigned probabilities
     def assign_class(self, job_probs):
