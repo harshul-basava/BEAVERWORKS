@@ -149,16 +149,15 @@ class ScoreKeeper(object):
         self.remaining_time+=5
         
     # subtract from remaining time
-    def apply_fatty_debuff(self):
+    def apply_fatty_buff(self):
         self.remaining_time-=5
     
     # for each doctor in ambulance, add one serum
     def apply_doctor_buff(self):
         self.serum+=1
     
-
     # for each thug in ambulance, injure one healthy non-thug human
-    def apply_thug_debuff(self):
+    def apply_thug_buff(self):
         for victim in self.carrying:
             if victim.is_healthy() and not (victim.get_job()=="thug"):
                 victim.set_injured()
@@ -167,18 +166,19 @@ class ScoreKeeper(object):
                 break
     
     # applies all job-related buffs. 
-    # doctor, engineer, thug buffs only apply if person is healthy
+    # engineer, thug buffs only apply if person is healthy
+    # serums from doctor can only be acquired if healthy and scramming
     # fatty debuff applies for all states
     def apply_all_job_buffs(self, is_scram):
         for person in self.carrying:
             if person.get_job()=="engineer" and person.is_healthy():
                 self.apply_engineer_buff()
             elif person.get_job()=="fatty":
-                self.apply_fatty_debuff()
+                self.apply_fatty_buff()
             elif is_scram and person.get_job()=="doctor" and person.is_healthy():
                 self.apply_doctor_buff()
             elif person.get_job()=="thug" and person.is_healthy():
-                self.apply_thug_debuff()
+                self.apply_thug_buff()
         return
     
     def available_action_space(self):
