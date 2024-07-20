@@ -20,3 +20,10 @@ class ActionCost(Enum):
     SKIP = 15
     SCRAM = 120
     REVEAL = 20
+
+class Job(Enum):
+    DOCTOR = "doctor"
+    ENGINEER = "engineer"
+    THUG = "thug"
+    NORMAL = "normal"
+    FATTY = "fatty"
