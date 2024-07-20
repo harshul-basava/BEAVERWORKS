@@ -17,6 +17,8 @@ class ScoreKeeper(object):
         self.logger = []
         self.all_logs = []
         
+        self.serum = 0
+
         self.reset()
         
     def reset(self):
@@ -84,6 +86,8 @@ class ScoreKeeper(object):
             self.ambulance["injured"] += 1
         else:
             self.ambulance["healthy"] += 1
+        
+        self.apply_all_job_buffs(False)
 
     def squish(self, humanoid):
         """
@@ -96,6 +100,8 @@ class ScoreKeeper(object):
         if not (humanoid.is_zombie() or humanoid.is_corpse()):
             self.scorekeeper["killed"] += 1
 
+        self.apply_all_job_buffs(False)
+
     def skip(self, humanoid):
         """
         skips the humanoid
@@ -106,6 +112,8 @@ class ScoreKeeper(object):
         self.remaining_time -= ActionCost.SKIP.value
         if humanoid.is_injured():
             self.scorekeeper["killed"] += 1
+        
+        self.apply_all_job_buffs(False)
 
     def scram(self, humanoid = None):
         """
@@ -126,12 +134,52 @@ class ScoreKeeper(object):
         self.ambulance["zombie"] = 0
         self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
+
+        self.apply_all_job_buffs(True)
+
     def reveal(self, humanoid):
         "shows the occupation of the current human/zombie"
         self.log(humanoid, 'reveal')
         self.remaining_time -=ActionCost.REVEAL.value
-        
 
+        self.apply_all_job_buffs(False)
+    
+    # add to remaining time 
+    def apply_engineer_buff(self):
+        self.remaining_time+=5
+        
+    # subtract from remaining time
+    def apply_fatty_buff(self):
+        self.remaining_time-=5
+    
+    # for each doctor in ambulance, add one serum
+    def apply_doctor_buff(self):
+        self.serum+=1
+    
+    # for each thug in ambulance, injure one healthy non-thug human
+    def apply_thug_buff(self):
+        for victim in self.carrying:
+            if victim.is_healthy() and not (victim.get_job()=="thug"):
+                victim.set_injured()
+                self.ambulance["injured"]+=1
+                self.ambulance["healthy"]-=1
+                break
+    
+    # applies all job-related buffs. 
+    # engineer, thug buffs only apply if person is healthy
+    # serums from doctor can only be acquired if healthy and scramming
+    # fatty debuff applies for all states
+    def apply_all_job_buffs(self, is_scram):
+        for person in self.carrying:
+            if person.get_job()=="engineer" and person.is_healthy():
+                self.apply_engineer_buff()
+            elif person.get_job()=="fatty":
+                self.apply_fatty_buff()
+            elif is_scram and person.get_job()=="doctor" and person.is_healthy():
+                self.apply_doctor_buff()
+            elif person.get_job()=="thug" and person.is_healthy():
+                self.apply_thug_buff()
+        return
     
     def available_action_space(self):
         """
