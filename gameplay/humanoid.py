@@ -57,7 +57,11 @@ class Humanoid(object):
         return self.state == State.CORPSE.value
     
     def get_job(self):
-        return self.job.value
+        return self.job
+    
+    def set_injured(self):
+        self.state = State.INJURED.value
+        return
     
     @staticmethod
     def get_state_idx(class_string):
