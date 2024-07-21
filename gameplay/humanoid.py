@@ -63,6 +63,9 @@ class Humanoid(object):
         self.state = State.INJURED.value
         return
     
+    def set_human(self):
+        self.state = State.HEALTHY.value
+    
     @staticmethod
     def get_state_idx(class_string):
         return MAP_CLASS_STR_TO_INT[class_string]

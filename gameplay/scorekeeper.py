@@ -73,7 +73,7 @@ class ScoreKeeper(object):
 
     def save(self, humanoid):
         """
-        saves the humanoid
+        saves the humanoid, applies serum on zombie if available
         updates scorekeeper
         """
         self.log(humanoid, 'save')
@@ -81,7 +81,12 @@ class ScoreKeeper(object):
         
         self.remaining_time -= ActionCost.SAVE.value
         if humanoid.is_zombie():
-            self.ambulance["zombie"] += 1
+            if self.serum>0:
+                humanoid.set_human()
+                self.ambulance["healthy"] += 1
+                self.serum -= 1
+            else:
+                self.ambulance["zombie"] += 1
         elif humanoid.is_injured():
             self.ambulance["injured"] += 1
         else:
