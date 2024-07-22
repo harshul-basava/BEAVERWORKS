@@ -42,21 +42,21 @@ class Humanoid(object):
     def is_zombie(self):
         return self.state == State.ZOMBIE.value
 
-    def is_injured(self):
-        return self.state == State.INJURED.value
+    # def is_injured(self):
+    #     return self.state == State.INJURED.value
 
     def is_healthy(self):
         return self.state == State.HEALTHY.value
 
-    def is_corpse(self):
-        return self.state == State.CORPSE.value
+    # def is_corpse(self):
+    #     return self.state == State.CORPSE.value
     
     def get_job(self):
         return self.job
     
-    def set_injured(self):
-        self.state = State.INJURED.value
-        return
+    # def set_injured(self):
+    #     self.state = State.INJURED.value
+    #     return
     
     def set_human(self):
         self.state = State.HEALTHY.value
