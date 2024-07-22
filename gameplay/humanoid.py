@@ -17,6 +17,16 @@ class Humanoid(object):
         self.probability = self.create_job_probs()  # probability is a dictionary of floats (0-1) representing probabilities of each job class
         self.state = state  # human or zombie
         self.job = self.assign_class(self.probability)
+        self.revealed = False
+
+    #finds out if reveal has been pressed
+    def revealedd(self):
+        return self.revealed
+    
+    #reveals
+    def reveals(self):
+        self.revealed=True
+        return 
     
     # creates probabilities for jobs
     def create_job_probs(self):
