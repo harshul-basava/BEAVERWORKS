@@ -92,7 +92,6 @@ class ScoreKeeper(object):
         else:
             self.ambulance["healthy"] += 1
         
-        self.apply_all_job_buffs(False)
 
     def squish(self, humanoid):
         """
@@ -105,7 +104,6 @@ class ScoreKeeper(object):
         if not (humanoid.is_zombie() or humanoid.is_corpse()):
             self.scorekeeper["killed"] += 1
 
-        self.apply_all_job_buffs(False)
 
     def skip(self, humanoid):
         """
@@ -118,7 +116,6 @@ class ScoreKeeper(object):
         if humanoid.is_injured():
             self.scorekeeper["killed"] += 1
         
-        self.apply_all_job_buffs(False)
 
     def scram(self, humanoid = None):
         """
@@ -140,7 +137,7 @@ class ScoreKeeper(object):
         self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
 
-        self.apply_all_job_buffs(True)
+        self.apply_all_job_buffs()
 
     def reveal(self, humanoid):
         
@@ -151,7 +148,6 @@ class ScoreKeeper(object):
         self.log(humanoid, 'reveal')
         self.remaining_time -=ActionCost.REVEAL.value
         humanoid.reveals()
-        self.apply_all_job_buffs(False)
     
     # add to remaining time 
     def apply_engineer_buff(self):
@@ -175,16 +171,15 @@ class ScoreKeeper(object):
                 break
     
     # applies all job-related buffs. 
-    # engineer, thug buffs only apply if person is healthy
-    # serums from doctor can only be acquired if healthy and scramming
-    # fatty debuff applies for all states
+    # engineer, thug, doctor buffs only apply if person is healthy, when scram
+    # fatty debuff applies for all states once scrum
     def apply_all_job_buffs(self, is_scram):
         for person in self.carrying:
             if person.get_job()=="engineer" and person.is_healthy():
                 self.apply_engineer_buff()
             elif person.get_job()=="fatty":
                 self.apply_fatty_buff()
-            elif is_scram and person.get_job()=="doctor" and person.is_healthy():
+            elif person.get_job()=="doctor" and person.is_healthy():
                 self.apply_doctor_buff()
             elif person.get_job()=="thug" and person.is_healthy():
                 self.apply_thug_buff()
