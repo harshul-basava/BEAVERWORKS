@@ -39,22 +39,18 @@ class BaseModel(nn.Module):
         super(BaseModel, self).__init__()
         self.external_variables = 3
         self.storage_cap = 10
-        self.humanoid_classes = 4
+        self.humanoid_classes = 2
         self.action_dim = 4
-        
-        self.output_shape = self.external_variables+\
-                            self.humanoid_classes+\
-                            self.humanoid_classes+\
-                            self.action_dim
+
     def forward(self, inputs):
         x_v = inputs['variables']
         x_p = inputs['humanoid_class_probs']
         x_s = inputs['vehicle_storage_class_probs']
         x_a = inputs["doable_actions"]
         
-        x_s = torch.sum(x_s,1) # simple: get sum of class probabilities along vehicle storage
+        x_s = torch.sum(x_s, 1) # simple: get sum of class probabilities along vehicle storage
 
-        x = torch.concat([x_v,x_p,x_s,x_a],axis=1)
+        x = torch.concat([x_v, x_p, x_s, x_a], axis=1)
         return x
 
 class ActorCritic(nn.Module):
@@ -63,10 +59,11 @@ class ActorCritic(nn.Module):
 
         self.has_continuous_action_space = has_continuous_action_space
         self.action_dim = 4
+        self.obs_dim = 15
         
         self.actor = nn.Sequential(
                         BaseModel(),
-                        nn.Linear(15, 32),
+                        nn.Linear(self.obs_dim, 32),
                         nn.ReLU(),
                         nn.Linear(32,32),
                         nn.ReLU(),
@@ -76,7 +73,7 @@ class ActorCritic(nn.Module):
         # critic
         self.critic = nn.Sequential(
                         BaseModel(),
-                        nn.Linear(15,32),
+                        nn.Linear(self.obs_dim5, 32),
                         nn.ReLU(),
                         nn.Linear(32,32),
                         nn.ReLU(),
@@ -277,5 +274,4 @@ class PPO:
     def load(self, checkpoint_path):
         self.policy_old.load_state_dict(torch.load(checkpoint_path, map_location=lambda storage, loc: storage))
         self.policy.load_state_dict(torch.load(checkpoint_path, map_location=lambda storage, loc: storage))
-        
         

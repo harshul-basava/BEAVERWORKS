@@ -119,7 +119,7 @@ class InferInterface(Env):
     
     def act(self, humanoid, pred=True):
         """
-        Acts on the environment according the the humanoid given and its observation state
+        Acts on the environment according the humanoid given and its observation state
         
         humanoid : the humanoid being presented
         """
@@ -165,13 +165,9 @@ class InferInterface(Env):
 # Takes a humanoid as input and returns its class in the form of a list of probabilities
 def oracle(humanoid):
     if humanoid.is_zombie():
-        return [1.0, 0.0, 0.0, 0.0]
+        return [1.0, 0.0]
     elif humanoid.is_healthy():
-        return [0.0, 1.0, 0.0, 0.0]
-    elif humanoid.is_injured():
-        return [0.0, 0.0, 1.0, 0.0]
-    elif humanoid.is_corpse():
-        return [0.0, 0.0, 0.0, 1.0]
+        return [0.0, 1.0]
     else:
-        return [0.25, 0.25, 0.25, 0.25]
+        return [0.5, 0.5]
 
