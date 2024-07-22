@@ -172,8 +172,8 @@ class ScoreKeeper(object):
     
     # applies all job-related buffs. 
     # engineer, thug, doctor buffs only apply if person is healthy, when scram
-    # fatty debuff applies for all states once scrum
-    def apply_all_job_buffs(self, is_scram):
+    # fatty debuff applies for all states once scrammed
+    def apply_all_job_buffs(self):
         for person in self.carrying:
             if person.get_job()=="engineer" and person.is_healthy():
                 self.apply_engineer_buff()
