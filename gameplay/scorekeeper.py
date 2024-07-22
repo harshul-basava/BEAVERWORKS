@@ -143,10 +143,14 @@ class ScoreKeeper(object):
         self.apply_all_job_buffs(True)
 
     def reveal(self, humanoid):
+        
+        if(humanoid.revealedd()):
+            return
+        
         "shows the occupation of the current human/zombie"
         self.log(humanoid, 'reveal')
         self.remaining_time -=ActionCost.REVEAL.value
-
+        humanoid.reveals()
         self.apply_all_job_buffs(False)
     
     # add to remaining time 

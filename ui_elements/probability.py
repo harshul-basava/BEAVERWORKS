@@ -8,12 +8,16 @@ class Probability(object):
         self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.6 * h))
         self.jobs=[]
         self.probab=[]
+        self.revealed = False
         self.render(prob)
         self.canvas.update()
+        
         
 
 
     def render_Job(self, job):
+        if self.revealed:
+            return
         if len(self.jobs)>0:
             for jobb in self.jobs:
                 jobb.destroy()
@@ -22,7 +26,7 @@ class Probability(object):
                 pro.destroy()
         self.jobs.append(tk.Label(self.canvas, text="Job: " + job, font=("Arial", 15)))
         self.jobs[len(self.jobs)-1].place(x=80, y=30)
-        
+        self.revealed=True
         self.canvas.update()
         return
     def render(self, probs):
