@@ -1,12 +1,15 @@
-from gameplay.enums import State
+from gameplay.enums import State, Job
 import random
 
 MAP_CLASS_STR_TO_INT = {s.value:i for i,s in enumerate(State)}
 MAP_CLASS_INT_TO_STR = [s.value for s in State]
 
+MAP_JOB_STR_TO_INT = {j.value: i for i, j in enumerate(Job)}
+MAP_JOB_INT_TO_STR = [j.value for j in Job]
+
 class Humanoid(object):
     """
-    Are they a human or a zombie??? What probability?
+    Are they a human or a zombie??? What job??
     """
     
     def __init__(self, fp, state, job_probs=None):
@@ -17,18 +20,13 @@ class Humanoid(object):
     
     # creates probabilities for jobs
     def create_job_probs(self):
-        probs = {}
-        doctorProb = random.randint(0, 100)
-        engineerProb = random.randint(0, 100-doctorProb)
-        normalProb = random.randint(0,100-doctorProb-engineerProb)
-        thugProb = random.randint(0,100-doctorProb-engineerProb-normalProb)
-        fattyProb = 100-doctorProb-engineerProb-normalProb-thugProb
-        probs['doctor'] = doctorProb
-        probs['engineer'] = engineerProb
-        probs['normal'] = normalProb
-        probs['thug'] = thugProb
-        probs['fatty'] = fattyProb
-        return probs
+        nums = [random.randint(1, 100) for _ in range(5)]
+
+        probs = [round(100 * round(num / sum(nums), 2)) for num in nums]
+        jobs = ['doctor', 'engineer', 'normal', 'thug', 'fatty']
+        random.shuffle(probs)
+
+        return dict(zip(jobs, probs))
 
     # returns a job class based on assigned probabilities
     def assign_class(self, job_probs):
@@ -53,6 +51,16 @@ class Humanoid(object):
     def is_corpse(self):
         return self.state == State.CORPSE.value
     
+    def get_job(self):
+        return self.job
+    
+    def set_injured(self):
+        self.state = State.INJURED.value
+        return
+    
+    def set_human(self):
+        self.state = State.HEALTHY.value
+    
     @staticmethod
     def get_state_idx(class_string):
         return MAP_CLASS_STR_TO_INT[class_string]
@@ -62,6 +70,19 @@ class Humanoid(object):
         return MAP_CLASS_INT_TO_STR[class_idx]
     
     @staticmethod
+    def get_job_idx(job_string):
+        return MAP_JOB_STR_TO_INT[job_string]
+    
+    @staticmethod
+    def get_job_string(job_idx):
+        return MAP_JOB_INT_TO_STR[job_idx]
+    
+    @staticmethod
     def get_all_states():
         return MAP_CLASS_INT_TO_STR
+    
+    @staticmethod
+    def get_all_jobs():
+        return MAP_JOB_INT_TO_STR
+
 
