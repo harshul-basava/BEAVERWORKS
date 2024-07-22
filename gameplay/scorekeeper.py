@@ -102,7 +102,7 @@ class ScoreKeeper(object):
         self.log(humanoid, 'squish')
         
         self.remaining_time -= ActionCost.SQUISH.value
-        if humanoid.is_human():
+        if humanoid.is_healthy():
             self.scorekeeper["killed"] += 1
 
         self.apply_all_job_buffs(False)
