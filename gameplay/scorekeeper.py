@@ -154,8 +154,7 @@ class ScoreKeeper(object):
     def swap(self, humanoid):
         self.log(humanoid, 'swap')
         self.remaining_time -= ActionCost.SWAP.value
-        self.carrying.append(humanoid)
-        
+        self.scorekeeper.carrying[index] = humanoid        
     
     # add to remaining time 
     def apply_engineer_buff(self):
