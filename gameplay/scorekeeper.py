@@ -151,7 +151,18 @@ class ScoreKeeper(object):
         self.remaining_time -= ActionCost.REVEAL.value
         humanoid.reveals()
     def swap(self, humanoid):
+        self.log(humanoid, 'swap')
         self.remaining_time -= ActionCost.REVEAL.value
+        if humanoid.is_zombie():
+            if self.serum > 0:
+                humanoid.set_human()
+                self.ambulance["healthy"] += 1
+                self.serum -= 1
+
+            else:
+                self.ambulance["zombie"] += 1
+        else:
+            self.ambulance["healthy"] += 1
     
     # add to remaining time 
     def apply_engineer_buff(self):
