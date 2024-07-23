@@ -13,6 +13,7 @@ class ActionState(Enum):
     SKIP = 'skip'
     SCRAM = 'scram'
     REVEAL = 'reveal'
+    SWAP = 'swap'
     
 class ActionCost(Enum):
     SAVE = 30
@@ -20,6 +21,7 @@ class ActionCost(Enum):
     SKIP = 15
     SCRAM = 120
     REVEAL = 20
+    SWAP = 15
 
 class Job(Enum):
     DOCTOR = "doctor"
