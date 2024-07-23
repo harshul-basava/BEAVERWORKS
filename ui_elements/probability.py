@@ -38,8 +38,12 @@ class Probability(object):
 
         self.probab.append(tk.Label(self.canvas, text="Probability", font=("Arial", 15)))
         self.probab[len(self.probab)-1].place(x=80, y=30)
+
+        # dict of probabilities to jobs (to display jobs in probability order)
+        probs_to_jobs = {probs[j]:j for j in probs.keys()}
+
         i=0
-        for job, prob in probs.items():
+        for prob, job in sorted(probs_to_jobs.items(), reverse=True):   # show in descending probability order
             self.probab.append(tk.Label(self.canvas, text=job, font=("Arial", 10)))
             self.probab[len(self.probab)-1].place(x=70, y=80+30*i)
 
