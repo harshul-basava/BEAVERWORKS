@@ -16,7 +16,7 @@ class ScoreKeeper(object):
         self.capacity = capacity
         self.carrying = []
         
-        self.actions = 4
+        self.actions = 5
         
         self.logger = []
         self.all_logs = []

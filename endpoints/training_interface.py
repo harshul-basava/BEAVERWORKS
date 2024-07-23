@@ -33,15 +33,18 @@ class TrainInterface(Env):
         self.display = display
 
         self.environment_params = {
-            "car_capacity" : self.scorekeeper.capacity,
-            "num_classes" : len(Humanoid.get_all_states()),
-            "num_actions" : self.scorekeeper.actions,
+            "car_capacity": self.scorekeeper.capacity,
+            "num_classes": len(Humanoid.get_all_states()),
+            "num_jobs": len(Humanoid.get_all_jobs()),
+            "num_actions": self.scorekeeper.actions,
         }
-        self.observation_space = {"variables": np.zeros(3),
-                                  "vehicle_storage_class_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes'])),
-                                    "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
-                                    "doable_actions":np.ones(self.environment_params['num_actions'],np.int64),
-                                    }
+        self.observation_space = {"variables": np.zeros(4),
+                                  "vehicle_storage_class_probs": np.zeros((self.environment_params['car_capacity'], self.environment_params['num_classes'])),
+                                  "vehicle_storage_job_probs": np.zeros((self.environment_params['car_capacity'],self.environment_params['num_jobs'])),
+                                  "humanoid_class_probs": np.zeros(self.environment_params['num_classes']),
+                                  "job_probs": np.zeros(self.environment_params['num_jobs']),
+                                  "doable_actions": np.ones(self.environment_params['num_actions'], np.int64),
+                                  }
 
         self.action_space = spaces.Discrete(self.environment_params['num_actions'],)
         
@@ -64,10 +67,12 @@ class TrainInterface(Env):
         resets game for a new episode to run.
         returns observation space
         """
-        self.observation_space = {"variables": np.zeros(3),
+        self.observation_space = {"variables": np.zeros(4),
                                   "vehicle_storage_class_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes'])),
-                                    "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
-                                    "doable_actions":np.ones(self.environment_params['num_actions'],np.int64),
+                                  "vehicle_storage_job_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_jobs'])),
+                                  "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
+                                  "job_probs": np.zeros(self.environment_params['num_jobs']),
+                                  "doable_actions":np.ones(self.environment_params['num_actions'],np.int64),
                                     }
         self.previous_cum_reward = 0
         self.data_parser.reset()
@@ -81,6 +86,7 @@ class TrainInterface(Env):
         """
         self.humanoid = self.data_parser.get_random()
         img_ = Image.open(os.path.join(self.img_data_root, self.humanoid.fp))
+        self.job_probs = self.humanoid.probability
         if pred:
             self.humanoid_probs = self.predictor.get_probs(img_)
         else:
@@ -93,9 +99,11 @@ class TrainInterface(Env):
         self.observation_space['variables'] = np.array([self.scorekeeper.remaining_time, 
                                                         self.previous_cum_reward,
                                                         sum(self.scorekeeper.ambulance.values()),
+                                                        self.scorekeeper.serum
                                                         ])
         self.observation_space["doable_actions"] = self.scorekeeper.available_action_space()
         self.observation_space["humanoid_class_probs"] = self.humanoid_probs
+        self.observation_space["num_jobs"] = self.job_probs
         
     def step(self, action_idx):
         """
@@ -115,8 +123,10 @@ class TrainInterface(Env):
             self.previous_cum_reward = self.scorekeeper.get_cumulative_reward()
             if action == "save":
                 self.observation_space["vehicle_storage_class_probs"][self.scorekeeper.get_current_capacity()-1] = self.humanoid_probs
+                self.observation_space["vehicle_storage_job_probs"][self.scorekeeper.get_current_capacity()-1] = self.job_probs
             elif action == "scram":
-                self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes']))
+                self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_classes']))
+                self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_jobs']))
             self.get_humanoid()
         else:
             reward -= 0.5

@@ -15,7 +15,7 @@ import warnings
 
 
 class Predictor(object):
-    def __init__(self, classes=4, model_file=os.path.join('models', 'baseline.pth')):
+    def __init__(self, classes=2, model_file=os.path.join('models', 'baseline.pth')):
         self.classes = classes
         self.net = None
         self.device = torch.device('cuda:0') if torch.cuda.is_available() else torch.device('cpu')
@@ -27,7 +27,7 @@ class Predictor(object):
         if not self.is_model_loaded:
             warnings.warn("Model not loaded, resorting to random prediction")
 
-    def _load_model(self, weights_path, num_classes=4):
+    def _load_model(self, weights_path, num_classes=2):
         try:
             self.net = DefaultCNN(num_classes)
             self.net.load_state_dict(torch.load(weights_path))
@@ -66,7 +66,7 @@ class HeuristicInterface(object):
             self.suggestion = tk.Label(self.canvas, text=self.text, font=("Arial", 20))
             self.suggestion.pack(side=tk.TOP)
 
-    def _load_model(self, weights_path, num_classes=4):
+    def _load_model(self, weights_path, num_classes=2):
         try:
             self.net = DefaultCNN(num_classes)
             self.net.load_state_dict(torch.load(weights_path))
@@ -101,9 +101,12 @@ class HeuristicInterface(object):
     def get_random_suggestion():
         return random.choice(list(ActionCost))
 
-    def get_model_suggestion(self, humanoid, is_capacity_full) -> ActionCost:
+    def get_model_suggestion(self, humanoid, is_capacity_full, pred=True) -> ActionCost:
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
-        probs: np.ndarray = self.predictor.get_probs(img_)
+        if pred:
+            probs: np.ndarray = self.predictor.get_probs(img_)
+        else:
+            probs: np.ndarray = oracle(humanoid)
 
         predicted_ind: int = np.argmax(probs, 0)
         class_string = Humanoid.get_all_states()[predicted_ind]
@@ -120,9 +123,17 @@ class HeuristicInterface(object):
             return ActionCost.SCRAM
         if predicted_state is State.ZOMBIE:
             return ActionCost.SQUISH
-        if predicted_state is State.INJURED:
-            return ActionCost.SAVE
+        # if predicted_state is State.INJURED:
+        #     return ActionCost.SAVE
         if predicted_state is State.HEALTHY:
             return ActionCost.SAVE
-        if predicted_state is State.CORPSE:
-            return ActionCost.SQUISH
+        # if predicted_state is State.CORPSE:
+        #     return ActionCost.SQUISH
+
+def oracle(humanoid):
+    if humanoid.is_zombie():
+        return [1.0, 0.0]
+    elif humanoid.is_healthy():
+        return [0.0, 1.0]
+    else:
+        return [0.5, 0.5]
