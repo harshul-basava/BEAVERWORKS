@@ -152,7 +152,7 @@ class ScoreKeeper(object):
         humanoid.reveals()
     def swap(self, humanoid):
         self.log(humanoid, 'swap')
-        self.remaining_time -= ActionCost.REVEAL.value
+        self.remaining_time -= ActionCost.SWAP.value
         self.carrying.append(humanoid)
         
     
