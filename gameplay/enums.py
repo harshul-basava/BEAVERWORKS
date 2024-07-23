@@ -4,8 +4,6 @@ from enum import Enum
 class State(Enum):
     ZOMBIE = "zombie"
     HEALTHY = "healthy"
-    # INJURED = "injured"
-    # CORPSE = "corpse"
 
 class ActionState(Enum):
     SAVE = 'save'

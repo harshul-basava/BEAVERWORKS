@@ -164,8 +164,8 @@ class ScoreKeeper(object):
     
     # for each doctor in ambulance, add one serum
     def apply_doctor_buff(self, multiplier):
-        if (multiplier*100)<random.randInt(0,100):
-            self.serum+=1
+        if (multiplier*100) < random.randint(0, 100):
+            self.serum += 1
     
     # for each thug in ambulance, injure one healthy non-thug human
     def apply_thug_buff(self):
@@ -232,6 +232,8 @@ class ScoreKeeper(object):
             self.skip(humanoid)
         elif idx == 3:
             self.scram(humanoid)
+        elif idx == 4:
+            self.reveal(humanoid)
         else:
             raise ValueError("action index range exceeded")
         return True

@@ -77,7 +77,7 @@ class TrainInterface(Env):
         self.previous_cum_reward = 0
         self.data_parser.reset()
         self.scorekeeper.reset()
-        self.get_humanoid()
+        self.get_humanoid(pred=False)
         return self.observation_space
     
     def get_humanoid(self, pred=True):
@@ -86,7 +86,7 @@ class TrainInterface(Env):
         """
         self.humanoid = self.data_parser.get_random()
         img_ = Image.open(os.path.join(self.img_data_root, self.humanoid.fp))
-        self.job_probs = self.humanoid.probability
+        self.job_probs = self.humanoid.raw_probs
         if pred:
             self.humanoid_probs = self.predictor.get_probs(img_)
         else:
@@ -103,7 +103,7 @@ class TrainInterface(Env):
                                                         ])
         self.observation_space["doable_actions"] = self.scorekeeper.available_action_space()
         self.observation_space["humanoid_class_probs"] = self.humanoid_probs
-        self.observation_space["num_jobs"] = self.job_probs
+        self.observation_space["job_probs"] = self.job_probs
         
     def step(self, action_idx):
         """
@@ -126,8 +126,8 @@ class TrainInterface(Env):
                 self.observation_space["vehicle_storage_job_probs"][self.scorekeeper.get_current_capacity()-1] = self.job_probs
             elif action == "scram":
                 self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_classes']))
-                self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_jobs']))
-            self.get_humanoid()
+                self.observation_space["vehicle_storage_job_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_jobs']))
+            self.get_humanoid(pred=False)
         else:
             reward -= 0.5
         
