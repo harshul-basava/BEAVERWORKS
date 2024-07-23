@@ -150,6 +150,8 @@ class ScoreKeeper(object):
 
         self.remaining_time -= ActionCost.REVEAL.value
         humanoid.reveals()
+    def swap(self, humanoid):
+        self.remaining_time -= ActionCost.REVEAL.value
     
     # add to remaining time 
     def apply_engineer_buff(self):
