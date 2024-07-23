@@ -8,6 +8,7 @@ from collections import Counter
 MAP_ACTION_STR_TO_INT = {s.value:i for i,s in enumerate(ActionState)}
 MAP_ACTION_INT_TO_STR = [s.value for s in ActionState]
 
+
 class ScoreKeeper(object):
     def __init__(self, shift_len, capacity):
         
@@ -30,7 +31,7 @@ class ScoreKeeper(object):
         """
         self.ambulance = {
             "zombie": 0,
-            "injured": 0,
+            # "injured": 0,
             "healthy": 0
         }
         self.scorekeeper = {
@@ -49,13 +50,13 @@ class ScoreKeeper(object):
         humanoid : the humanoid presented
         action : the action taken
         """
-        self.logger.append({"humanoid_class":humanoid.state,
-                            "humanoid_fp":humanoid.fp,
-                            "humanoid_probs":humanoid.probability,
-                            "humanoid_job":humanoid.job,
-                            "action":action,
-                            "remaining_time":self.remaining_time,
-                            "capacity":self.get_current_capacity(),
+        self.logger.append({"humanoid_class": humanoid.state,
+                            "humanoid_fp": humanoid.fp,
+                            "humanoid_probs": humanoid.probability,
+                            "humanoid_job": humanoid.job,
+                            "action": action,
+                            "remaining_time": self.remaining_time,
+                            "capacity": self.get_current_capacity(),
                             })
         
     def save_log(self,):
@@ -72,7 +73,6 @@ class ScoreKeeper(object):
             logs.append(log)
         logs = pd.DataFrame(logs)
         logs.to_csv('log.csv')
-        
 
     def save(self, humanoid):
         """
@@ -84,14 +84,15 @@ class ScoreKeeper(object):
         
         self.remaining_time -= ActionCost.SAVE.value
         if humanoid.is_zombie():
-            if self.serum>0:
+            if self.serum > 0:
                 humanoid.set_human()
                 self.ambulance["healthy"] += 1
                 self.serum -= 1
+
             else:
                 self.ambulance["zombie"] += 1
-        elif humanoid.is_injured():
-            self.ambulance["injured"] += 1
+        # elif humanoid.is_injured():
+        #     self.ambulance["injured"] += 1
         else:
             self.ambulance["healthy"] += 1
         
@@ -104,7 +105,7 @@ class ScoreKeeper(object):
         self.log(humanoid, 'squish')
         
         self.remaining_time -= ActionCost.SQUISH.value
-        if not (humanoid.is_zombie() or humanoid.is_corpse()):
+        if humanoid.is_healthy():
             self.scorekeeper["killed"] += 1
 
 
@@ -116,8 +117,8 @@ class ScoreKeeper(object):
         self.log(humanoid, 'skip')
         
         self.remaining_time -= ActionCost.SKIP.value
-        if humanoid.is_injured():
-            self.scorekeeper["killed"] += 1
+        # if humanoid.is_injured():
+        #     self.scorekeeper["killed"] += 1
         
 
     def scram(self, humanoid = None):
@@ -128,19 +129,19 @@ class ScoreKeeper(object):
         if humanoid:
             self.log(humanoid, 'scram')
         
-        self.carrying = []
 
         self.remaining_time -= ActionCost.SCRAM.value
         if self.ambulance["zombie"] > 0:
-            self.scorekeeper["killed"] += self.ambulance["injured"] + self.ambulance["healthy"]
+            self.scorekeeper["killed"] += self.ambulance["healthy"]
         else:
-            self.scorekeeper["saved"] += self.ambulance["injured"] + self.ambulance["healthy"]
+            self.scorekeeper["saved"] += self.ambulance["healthy"]
 
         self.ambulance["zombie"] = 0
-        self.ambulance["injured"] = 0
+        # self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
-
         self.apply_all_job_buffs()
+        
+        self.carrying = []
 
     def reveal(self, humanoid):
         
@@ -149,7 +150,8 @@ class ScoreKeeper(object):
         
         "shows the occupation of the current human/zombie"
         self.log(humanoid, 'reveal')
-        self.remaining_time -=ActionCost.REVEAL.value
+
+        self.remaining_time -= ActionCost.REVEAL.value
         humanoid.reveals()
     
     # add to remaining time 
@@ -167,6 +169,7 @@ class ScoreKeeper(object):
     
     # for each thug in ambulance, injure one healthy non-thug human
     def apply_thug_buff(self):
+        return
         for victim in self.carrying:
             if victim.is_healthy() and not (victim.get_job()=="thug"):
                 victim.set_injured()
@@ -244,9 +247,9 @@ class ScoreKeeper(object):
         killed = self.scorekeeper["killed"]
         saved = self.scorekeeper["saved"] 
         if self.ambulance["zombie"] > 0:
-            killed += self.ambulance["injured"] + self.ambulance["healthy"]
+            killed += self.ambulance["healthy"]
         else:
-            saved += self.ambulance["injured"] + self.ambulance["healthy"]
+            saved += self.ambulance["healthy"]
         return saved - killed
 
     def get_current_capacity(self):
