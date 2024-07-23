@@ -58,7 +58,14 @@ class UI(object):
                                                scorekeeper),
                                                self.prob.update(self.humanoid.probability)]),
                         ("Reveal", lambda: [scorekeeper.reveal(self.humanoid), 
-                                            self.update_ui_reveal(scorekeeper)])]
+                                           self.update_ui_reveal(scorekeeper)]),
+                        ("Swap", lambda: [scorekeeper.swap(self.humanoid),
+                                           self.update_ui(scorekeeper),
+                                           self.get_next(
+                                               data_fp,
+                                               data_parser,
+                                               scorekeeper),
+                                               self.prob.update(self.humanoid.probability)])]
 
 
         self.button_menu = ButtonMenu(self.root, user_buttons)
