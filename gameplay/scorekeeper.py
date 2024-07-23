@@ -85,6 +85,7 @@ class ScoreKeeper(object):
                 humanoid.set_human()
                 self.ambulance["healthy"] += 1
                 self.serum -= 1
+
             else:
                 self.ambulance["zombie"] += 1
         # elif humanoid.is_injured():
@@ -128,7 +129,6 @@ class ScoreKeeper(object):
         if humanoid:
             self.log(humanoid, 'scram')
         
-        self.carrying = []
 
         self.remaining_time -= ActionCost.SCRAM.value
         if self.ambulance["zombie"] > 0:
@@ -141,6 +141,8 @@ class ScoreKeeper(object):
         self.ambulance["healthy"] = 0
 
         self.apply_all_job_buffs(True)
+        
+        self.carrying = []
 
     def reveal(self, humanoid):
         

@@ -16,8 +16,7 @@ class Probability(object):
 
 
     def render_Job(self, job):
-        if self.revealed:
-            return
+        
         if len(self.jobs)>0:
             for jobb in self.jobs:
                 jobb.destroy()
