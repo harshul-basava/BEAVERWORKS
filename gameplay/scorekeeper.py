@@ -1,6 +1,9 @@
 from gameplay.enums import ActionCost, ActionState
 import pandas as pd
 from ui_elements.probability import Probability
+import random
+from collections import Counter
+
 
 MAP_ACTION_STR_TO_INT = {s.value:i for i,s in enumerate(ActionState)}
 MAP_ACTION_INT_TO_STR = [s.value for s in ActionState]
@@ -150,16 +153,17 @@ class ScoreKeeper(object):
         humanoid.reveals()
     
     # add to remaining time 
-    def apply_engineer_buff(self):
-        self.remaining_time+=5
+    def apply_engineer_buff(self, multiplier):
+        self.remaining_time+=5*multiplier
         
     # subtract from remaining time
-    def apply_fatty_buff(self):
-        self.remaining_time-=5
+    def apply_fatty_buff(self, multiplier):
+        self.remaining_time-=5*multiplier
     
     # for each doctor in ambulance, add one serum
-    def apply_doctor_buff(self):
-        self.serum+=1
+    def apply_doctor_buff(self, multiplier):
+        if (multiplier*100)<random.randInt(0,100):
+            self.serum+=1
     
     # for each thug in ambulance, injure one healthy non-thug human
     def apply_thug_buff(self):
@@ -170,17 +174,25 @@ class ScoreKeeper(object):
                 self.ambulance["healthy"]-=1
                 break
     
+    # reduce efficacy of existing job buffs
+    def apply_pessimist_buff(self):
+        return 
+    
     # applies all job-related buffs. 
     # engineer, thug, doctor buffs only apply if person is healthy, when scram
     # fatty debuff applies for all states once scrammed
     def apply_all_job_buffs(self):
+        pessimist_multiplier = 0
+        for person in self.carrying():
+            if person.get_job()=="pessimist" and person.is_healthy():
+                pessimist_multiplier+=0.2
         for person in self.carrying:
             if person.get_job()=="engineer" and person.is_healthy():
-                self.apply_engineer_buff()
+                self.apply_engineer_buff(pessimist_multiplier)
             elif person.get_job()=="fatty":
-                self.apply_fatty_buff()
+                self.apply_fatty_buff(pessimist_multiplier)
             elif person.get_job()=="doctor" and person.is_healthy():
-                self.apply_doctor_buff()
+                self.apply_doctor_buff(pessimist_multiplier)
             elif person.get_job()=="thug" and person.is_healthy():
                 self.apply_thug_buff()
         return

@@ -27,3 +27,4 @@ class Job(Enum):
     THUG = "thug"
     NORMAL = "normal"
     FATTY = "fatty"
+    PESSIMIST = "pessimist"
