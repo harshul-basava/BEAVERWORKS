@@ -10,7 +10,6 @@ from torchvision import transforms
 from gameplay.enums import ActionCost, State
 from gameplay.humanoid import Humanoid
 from models.DefaultCNN import DefaultCNN
-from inference_interface import oracle
 
 import warnings
 
@@ -130,3 +129,11 @@ class HeuristicInterface(object):
             return ActionCost.SAVE
         # if predicted_state is State.CORPSE:
         #     return ActionCost.SQUISH
+
+def oracle(humanoid):
+    if humanoid.is_zombie():
+        return [1.0, 0.0]
+    elif humanoid.is_healthy():
+        return [0.0, 1.0]
+    else:
+        return [0.5, 0.5]

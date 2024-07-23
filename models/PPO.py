@@ -40,17 +40,22 @@ class BaseModel(nn.Module):
         self.external_variables = 3
         self.storage_cap = 10
         self.humanoid_classes = 2
-        self.action_dim = 4
+        self.action_dim = 5
 
     def forward(self, inputs):
-        x_v = inputs['variables']
-        x_p = inputs['humanoid_class_probs']
-        x_s = inputs['vehicle_storage_class_probs']
-        x_a = inputs["doable_actions"]
-        
-        x_s = torch.sum(x_s, 1) # simple: get sum of class probabilities along vehicle storage
+        x_v = inputs['variables']  # 4
+        x_p = inputs['humanoid_class_probs']  # 2
+        x_j = inputs['job_probs']  # 6
+        x_jv = inputs['vehicle_storage_job_probs']  # 10 x 6
+        x_s = inputs['vehicle_storage_class_probs']  # 10 x 2
+        x_a = inputs["doable_actions"]  # 5
 
-        x = torch.concat([x_v, x_p, x_s, x_a], axis=1)
+        # total observation space = 4 + 2 + 6 + 6 + 2 + 5 = 25
+        
+        x_s = torch.sum(x_s, 1)  # simple: get sum of class probabilities along vehicle storage
+        x_jv = torch.sum(x_jv, 1)  # get sum of job probabilities along vehicle storage
+
+        x = torch.concat([x_v, x_p, x_j, x_jv, x_s, x_a], axis=1)
         return x
 
 class ActorCritic(nn.Module):
@@ -58,8 +63,8 @@ class ActorCritic(nn.Module):
         super(ActorCritic, self).__init__()
 
         self.has_continuous_action_space = has_continuous_action_space
-        self.action_dim = 4
-        self.obs_dim = 15
+        self.action_dim = 5
+        self.obs_dim = 25
         
         self.actor = nn.Sequential(
                         BaseModel(),
@@ -221,10 +226,16 @@ class PPO:
         rewards = torch.tensor(rewards, dtype=torch.float32).to(device)
         rewards = (rewards - rewards.mean()) / (rewards.std() + 1e-7)
 
+
         # convert list to tensor
 #         old_states = torch.squeeze(torch.stack(self.buffer.states, dim=0)).detach().to(device)
 #         print(self.buffer.states)
-        old_states = {"variables":[], "humanoid_class_probs":[],"vehicle_storage_class_probs": [],"doable_actions": []}
+        old_states = {"variables": [],
+                      "humanoid_class_probs": [],
+                      "job_probs": [],
+                      "vehicle_storage_class_probs": [],
+                      "vehicle_storage_job_probs": [],
+                      "doable_actions": []}
         for i in self.buffer.states:
             for key in old_states.keys():
                 old_states[key].append(i[key])
