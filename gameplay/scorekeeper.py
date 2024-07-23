@@ -155,6 +155,9 @@ class ScoreKeeper(object):
     
         self.apply_all_job_buffs(False)
     
+    def swap(self, humanoid):
+        self.remaining_time -= ActionCost.SWAP.value
+    
     # add to remaining time 
     def apply_engineer_buff(self):
         self.remaining_time+=5
