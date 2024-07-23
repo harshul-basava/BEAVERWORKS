@@ -66,10 +66,10 @@ def datarow_to_state(datarow):
     # state = ""
     if img_class == 'Default':
         state = State.HEALTHY.value
-        if img_injured:
-            state = State.INJURED.value
+        # if img_injured:
+        #     state = State.INJURED.value
     else:
         state = State.ZOMBIE.value
-        if img_injured:
-            state = State.CORPSE.value
+        # if img_injured:
+        #     state = State.CORPSE.value
     return state

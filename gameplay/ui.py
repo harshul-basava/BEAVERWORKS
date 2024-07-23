@@ -7,6 +7,7 @@ from endpoints.heuristic_interface import HeuristicInterface
 from ui_elements.game_viewer import GameViewer
 from ui_elements.machine_menu import MachineMenu
 from ui_elements.probability import Probability
+from ui_elements.serum import Serum
 
 from os.path import join
 
@@ -88,13 +89,20 @@ class UI(object):
         # display probabilities
         self.prob = Probability(self.root, w, h, self.humanoid.probability)
 
+        #display serum count
+        self.serums = Serum(self.root, w, h, scorekeeper.serum)
+
+        
 
         self.root.mainloop()
+
+    
 
     def update_ui(self, scorekeeper):
         h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
         m = 60 - (scorekeeper.remaining_time % 60)
         self.clock.update_time(h, m)
+        self.serums.update(scorekeeper.serum)
 
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
     def update_ui_reveal(self, scorekeeper):
