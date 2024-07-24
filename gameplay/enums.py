@@ -13,11 +13,11 @@ class ActionState(Enum):
     REVEAL = 'reveal'
     
 class ActionCost(Enum):
-    SAVE = 30
+    SAVE = 15
     SQUISH = 5
-    SKIP = 15
-    SCRAM = 120
-    REVEAL = 20
+    SKIP = 10
+    SCRAM = 45
+    REVEAL = 15
 
 class Job(Enum):
     DOCTOR = "doctor"

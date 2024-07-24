@@ -39,7 +39,7 @@ def train(env):
     K_epochs = 80               # update policy for K epochs in one PPO update
 
     eps_clip = 0.2          # clip parameter for PPO
-    gamma = 0.99            # discount factor
+    gamma = 0.995            # discount factor
 
     lr_actor = 0.0003       # learning rate for actor network
     lr_critic = 0.001       # learning rate for critic network
