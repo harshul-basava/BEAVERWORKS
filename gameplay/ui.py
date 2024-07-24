@@ -8,6 +8,7 @@ from ui_elements.game_viewer import GameViewer
 from ui_elements.machine_menu import MachineMenu
 from ui_elements.probability import Probability
 from ui_elements.serum import Serum
+from ui_elements.swap import Swap
 
 from os.path import join
 
@@ -59,7 +60,7 @@ class UI(object):
                                                self.prob.update(self.humanoid.probability)]),
                         ("Reveal", lambda: [scorekeeper.reveal(self.humanoid), 
                                            self.update_ui_reveal(scorekeeper)]),
-                        ("Swap", lambda: [scorekeeper.swap(self.humanoid),
+                        ("Swap", lambda: [scorekeeper.swap(self.humanoid, self.swapper.render(scorekeeper.carrying)),
                                            self.update_ui(scorekeeper),
                                            self.get_next(
                                                data_fp,
@@ -98,6 +99,9 @@ class UI(object):
 
         #display serum count
         self.serums = Serum(self.root, w, h, scorekeeper.serum)
+
+        #create swapper
+        self.swapper   = Swap(self.root, w, h)
 
         
 
