@@ -150,28 +150,11 @@ class ScoreKeeper(object):
 
         self.remaining_time -= ActionCost.REVEAL.value
         humanoid.reveals()
-    def swap(self, humanoid, index):
+        
+    def swap(self, humanoid):
         self.log(humanoid, 'swap')
-        if humanoid.is_zombie():
-            if self.serum > 0:
-                humanoid.set_human()
-                self.ambulance["healthy"] += 1
-                self.serum -= 1
-
-            else:
-                self.ambulance["zombie"] += 1
-        # elif humanoid.is_injured():
-        #     self.ambulance["injured"] += 1
-        else:
-            self.ambulance["healthy"] += 1
-        if self.carrying[index].is_zombie():
-            self.ambulance["zombie"] -= 1
-        elif self.carrying[index].is_healthy():
-            self.ambulance["healthy"] -= 1
         self.remaining_time -= ActionCost.SWAP.value
-        self.carrying[index]=(humanoid)
-
-        return
+        self.scorekeeper.carrying[index] = humanoid        
     
     # add to remaining time 
     def apply_engineer_buff(self):
