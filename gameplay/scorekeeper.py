@@ -1,4 +1,4 @@
-from gameplay.enums import ActionCost, ActionState
+from gameplay.enums import ActionCost, ActionState, JobBaseEffect
 import pandas as pd
 from ui_elements.probability import Probability
 import random
@@ -156,15 +156,15 @@ class ScoreKeeper(object):
     
     # add to remaining time 
     def apply_engineer_buff(self, multiplier):
-        self.remaining_time+=5*multiplier
+        self.remaining_time+=JobBaseEffect.ENGINEER.value*multiplier
         
     # subtract from remaining time
     def apply_fatty_buff(self, multiplier):
-        self.remaining_time-=5*multiplier
+        self.remaining_time-=JobBaseEffect.FATTY.value*multiplier
     
     # for each doctor in ambulance, add one serum
     def apply_doctor_buff(self, multiplier):
-        if (multiplier*100) < random.randint(0, 100):
+        if (multiplier*100) > random.randint(0, 100):
             self.serum += 1
     
     # for each thug in ambulance, injure one healthy non-thug human
@@ -181,8 +181,10 @@ class ScoreKeeper(object):
     def apply_all_job_buffs(self):
         job_counts = Counter(person.get_job() for person in self.carrying if person.is_healthy())
 
-        pessimist_multiplier = 1-(0.2 * job_counts['pessimist'])
- 
+        pessimist_multiplier = 1
+        for i in range(job_counts['pessimist']):
+            pessimist_multiplier*= (1-JobBaseEffect.PESSIMIST.value)
+    
         for _ in range(job_counts["doctor"]):
             self.apply_doctor_buff(pessimist_multiplier)
 

@@ -68,9 +68,9 @@ class ActorCritic(nn.Module):
         
         self.actor = nn.Sequential(
                         BaseModel(),
-                        nn.Linear(self.obs_dim, 64),
+                        nn.Linear(self.obs_dim, 32),
                         nn.ReLU(),
-                        nn.Linear(64,32),
+                        nn.Linear(32,32),
                         nn.ReLU(),
                         nn.Linear(32, self.action_dim),
                         nn.Softmax(dim=-1)
@@ -78,9 +78,9 @@ class ActorCritic(nn.Module):
         # critic
         self.critic = nn.Sequential(
                         BaseModel(),
-                        nn.Linear(self.obs_dim, 64),
+                        nn.Linear(self.obs_dim, 32),
                         nn.ReLU(),
-                        nn.Linear(64,32),
+                        nn.Linear(32,32),
                         nn.ReLU(),
                         nn.Linear(32, 1)
                     )
