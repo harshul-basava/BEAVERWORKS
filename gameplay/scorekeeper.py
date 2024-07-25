@@ -96,6 +96,32 @@ class ScoreKeeper(object):
         else:
             self.ambulance["healthy"] += 1
         
+    def swap(self, humanoid, index):
+        """
+        swaps the humanoid
+        updates scorekeeper
+        """
+        self.log(humanoid, 'swap')
+        
+        self.remaining_time -= ActionCost.SWAP.value
+        
+        if humanoid.is_zombie():
+            if self.serum > 0:
+                humanoid.set_human()
+                self.ambulance["healthy"] += 1
+                self.serum -= 1
+
+            else:
+                self.ambulance["zombie"] += 1
+      
+        else:
+            self.ambulance["healthy"] += 1
+        if self.carrying[index].is_zombie():
+            self.ambulance["zombie"] -= 1
+        else:
+            self.ambulance["healthy"] -= 1
+        self.carrying[index] = humanoid
+        return
 
     def squish(self, humanoid):
         """
@@ -207,6 +233,7 @@ class ScoreKeeper(object):
             action_dict['squish'] = False
             action_dict['skip'] = False
             action_dict['reveal'] = False
+            action_dict['swap'] = False
         if self.at_capacity():
             action_dict['save'] = False
         return [action_dict[s.value] for s in ActionState]

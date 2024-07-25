@@ -5,7 +5,7 @@ import tkinter as tk
 class Serum(object):
     def __init__(self, root, w, h, count):
         self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.3 * h))
-        self.canvas.place(x=math.floor(0.03 * w), y=math.floor(0.6 * h))
+        self.canvas.place(x=math.floor(0.03 * w), y=math.floor(0.75 * h))
         self.serums=[]
         self.render(count)
         self.canvas.update()

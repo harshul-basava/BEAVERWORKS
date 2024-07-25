@@ -8,6 +8,7 @@ from ui_elements.game_viewer import GameViewer
 from ui_elements.machine_menu import MachineMenu
 from ui_elements.probability import Probability
 from ui_elements.serum import Serum
+from ui_elements.swapper import Swapper
 
 from os.path import join
 
@@ -58,7 +59,15 @@ class UI(object):
                                                scorekeeper),
                                                self.prob.update(self.humanoid.probability)]),
                         ("Reveal", lambda: [scorekeeper.reveal(self.humanoid), 
-                                            self.update_ui_reveal(scorekeeper)])]
+                                            self.update_ui_reveal(scorekeeper)]),
+                        ('Swap', lambda: [scorekeeper.swap(self.humanoid, self.swaps.render(self.root, scorekeeper.carrying)),
+                                           self.update_ui(scorekeeper),
+                                           self.get_next(
+                                               data_fp,
+                                               data_parser,
+                                               scorekeeper),
+                                               self.prob.update(self.humanoid.probability)])]
+        
 
 
         self.button_menu = ButtonMenu(self.root, user_buttons)
@@ -92,7 +101,8 @@ class UI(object):
         #display serum count
         self.serums = Serum(self.root, w, h, scorekeeper.serum)
 
-        
+        #displays the swapper buttons
+        self.swaps = Swapper(self.root, w, h)
 
         self.root.mainloop()
 
@@ -103,6 +113,8 @@ class UI(object):
         m = 60 - (scorekeeper.remaining_time % 60)
         self.clock.update_time(h, m)
         self.serums.update(scorekeeper.serum)
+        print('-----------------')
+        print(scorekeeper.carrying)
 
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
     def update_ui_reveal(self, scorekeeper):
