@@ -29,10 +29,15 @@ class ButtonMenu(object):
             self.buttons[2].config(state="disabled")
         else:
             self.buttons[2].config(state="normal")
+        if (remaining_time - ActionCost.SCRAM.value) < ActionCost.REVEAL.value:
+            self.buttons[4].config(state="disabled")
+        else:
+            self.buttons[4].config(state="normal")
         if at_capacity or (remaining_time - ActionCost.SCRAM.value) <= 0:
             self.buttons[0].config(state="disabled")
             self.buttons[1].config(state="disabled")
             self.buttons[2].config(state="disabled")
+            self.buttons[4].config(state="disabled")
 
 
 def create_buttons(canvas, items):
