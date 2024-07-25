@@ -135,11 +135,12 @@ class ScoreKeeper(object):
             self.scorekeeper["killed"] += self.ambulance["healthy"]
         else:
             self.scorekeeper["saved"] += self.ambulance["healthy"]
+            self.apply_all_job_buffs()
+
 
         self.ambulance["zombie"] = 0
         # self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
-        self.apply_all_job_buffs()
         
         self.carrying = []
 
@@ -169,13 +170,12 @@ class ScoreKeeper(object):
     
     # for each thug in ambulance, injure one healthy non-thug human
     def apply_thug_buff(self):
-        return
         for victim in self.carrying:
-            if victim.is_healthy() and not (victim.get_job()=="thug"):
-                victim.set_injured()
-                self.ambulance["injured"]+=1
-                self.ambulance["healthy"]-=1
-                break
+            if victim.get_job()!="thug":
+                if random() < .5:
+                    self.scorekeeper["killed"]+=1
+                    self.scorekeeper["healthy"]-=1
+            
     
     # applies all job-related buffs, which are only valid if the person is healthy
     def apply_all_job_buffs(self):
