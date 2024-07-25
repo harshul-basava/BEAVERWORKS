@@ -37,6 +37,7 @@ class ButtonMenu(object):
             self.buttons[0].config(state="disabled")
             self.buttons[1].config(state="disabled")
             self.buttons[2].config(state="disabled")
+            self.buttons[4].config(state="disabled")
 
 
 def create_buttons(canvas, items):
