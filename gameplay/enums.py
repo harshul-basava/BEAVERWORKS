@@ -13,11 +13,11 @@ class ActionState(Enum):
     REVEAL = 'reveal'
     
 class ActionCost(Enum):
-    SAVE = 15
-    SQUISH = 5
-    SKIP = 10
-    SCRAM = 45
-    REVEAL = 15
+    SAVE = 30
+    SQUISH = 15
+    SKIP = 20
+    SCRAM = 50
+    REVEAL = 30
 
 class Job(Enum):
     DOCTOR = "doctor"
@@ -26,3 +26,8 @@ class Job(Enum):
     NORMAL = "normal"
     FATTY = "fatty"
     PESSIMIST = "pessimist"
+
+class JobBaseEffect(Enum):
+    ENGINEER = 45
+    FATTY = 60
+    PESSIMIST = 0.4
