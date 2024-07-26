@@ -16,7 +16,7 @@ class ActionCost(Enum):
     SAVE = 30
     SQUISH = 15
     SKIP = 20
-    SCRAM = 70
+    SCRAM = 50
     REVEAL = 30
 
 class Job(Enum):
