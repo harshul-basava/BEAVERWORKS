@@ -141,7 +141,8 @@ class ScoreKeeper(object):
         self.ambulance["zombie"] = 0
         # self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
-        
+       
+                
         self.carrying = []
 
     def reveal(self, humanoid):
@@ -172,9 +173,9 @@ class ScoreKeeper(object):
     def apply_thug_buff(self):
         for victim in self.carrying:
             if victim.get_job()!="thug":
-                if random() < .5:
+                if random.random() < .5:
                     self.scorekeeper["killed"]+=1
-                    self.scorekeeper["healthy"]-=1
+                    self.scorekeeper["saved"]-=1
             
     
     # applies all job-related buffs, which are only valid if the person is healthy
