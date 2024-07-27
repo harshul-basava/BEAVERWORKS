@@ -35,6 +35,11 @@ class Humanoid(object):
         probs = [round(100 * round(num / sum(nums), 2)) for num in nums]
         jobs = ['doctor', 'engineer', 'normal', 'thug', 'fatty', 'pessimist']
 
+        # slightly scuffed way of making normal more common
+        if random.random() < 0.25:
+            i = probs.index(max(probs))
+            probs[2], probs[i] = probs[i], probs[2]
+
         self.raw_probs = [prob / 100 for prob in probs]
 
         return dict(zip(jobs, probs))
