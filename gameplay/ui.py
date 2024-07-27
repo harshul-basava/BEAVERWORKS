@@ -13,7 +13,7 @@ from os.path import join
 
 
 class UI(object):
-    def __init__(self, data_parser, scorekeeper, data_fp, suggest, log):
+    def __init__(self, data_parser, scorekeeper, data_fp, suggest, log, probs=True):
         #  Base window setup
         capacity = 10
         w, h = 1280, 800
@@ -35,33 +35,33 @@ class UI(object):
                                               data_fp,
                                               data_parser,
                                               scorekeeper), 
-                                            self.prob.update(self.humanoid.probability)]),
+                                          self.prob.update(self.humanoid, probs)]),
                         ("Squish", lambda: [scorekeeper.squish(self.humanoid),
                                             self.update_ui(scorekeeper),
                                             self.get_next(
                                                 data_fp,
                                                 data_parser,
                                                 scorekeeper),
-                                                self.prob.update(self.humanoid.probability)]),
+                                            self.prob.update(self.humanoid, probs)]),
                         ("Save", lambda: [scorekeeper.save(self.humanoid),
                                           self.update_ui(scorekeeper),
                                           self.get_next(
                                               data_fp,
                                               data_parser,
                                               scorekeeper),
-                                              self.prob.update(self.humanoid.probability)]),
+                                          self.prob.update(self.humanoid, probs)]),
                         ("Scram", lambda: [scorekeeper.scram(self.humanoid),
                                            self.update_ui(scorekeeper),
                                            self.get_next(
                                                data_fp,
                                                data_parser,
                                                scorekeeper),
-                                               self.prob.update(self.humanoid.probability)]),
+                                           self.prob.update(self.humanoid, probs)]),
                         ("Reveal", lambda: [scorekeeper.reveal(self.humanoid), 
                                             self.update_ui_reveal(scorekeeper)])]
 
 
-        self.button_menu = ButtonMenu(self.root, user_buttons)
+        self.button_menu = ButtonMenu(self.root, user_buttons, probs)
 
         if suggest:
             machine_buttons = [("Suggest", lambda: [self.machine_interface.suggest(self.humanoid)]),
@@ -71,7 +71,7 @@ class UI(object):
                                                     data_fp,
                                                     data_parser,
                                                     scorekeeper),
-                                                    self.prob.update(self.humanoid.probability)])]
+                                                    self.prob.update(self.humanoid, probs)])]
             self.machine_menu = MachineMenu(self.root, machine_buttons)
 
         #  Display central photo
@@ -84,19 +84,15 @@ class UI(object):
         self.clock = Clock(self.root, w, h, init_h, init_m)
         
         # Display ambulance capacity
-        self.capacity_meter = CapacityMeter(self.root, w, h, capacity)
-        
+        self.capacity_meter = CapacityMeter(self.root, w, h, capacity, probs)
+
         # display probabilities
-        self.prob = Probability(self.root, w, h, self.humanoid.probability)
+        self.prob = Probability(self.root, w, h, self.humanoid, probs)
 
         #display serum count
         self.serums = Serum(self.root, w, h, scorekeeper.serum)
 
-        
-
         self.root.mainloop()
-
-    
 
     def update_ui(self, scorekeeper):
         h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
@@ -105,6 +101,7 @@ class UI(object):
         self.serums.update(scorekeeper.serum)
 
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
+
     def update_ui_reveal(self, scorekeeper):
         h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
         m = 60 - (scorekeeper.remaining_time % 60)
