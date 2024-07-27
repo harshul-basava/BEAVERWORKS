@@ -71,7 +71,7 @@ class ScoreKeeper(object):
             log = pd.DataFrame(log)
             log['local_run_id'] = i
             logs.append(log)
-        logs = pd.DataFrame(logs)
+        logs = pd.concat(logs, ignore_index=True)
         logs.to_csv('log.csv')
 
     def save(self, humanoid):
@@ -169,7 +169,7 @@ class ScoreKeeper(object):
         if (multiplier*100) > random.randint(0, 100):
             self.serum += 1
     
-    # for each thug in ambulance, injure one healthy non-thug human
+    # if there is a thug present in the ambulance, each person has a 50% chance of dyind
     def apply_thug_buff(self):
         for victim in self.carrying:
             if victim.get_job()!="thug":

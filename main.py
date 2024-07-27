@@ -52,6 +52,8 @@ class Main(object):
         elif mode == 'train':  # RL training script
             env = TrainInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
             train(env)
+            if log:
+                self.scorekeeper.save_log()
         elif mode == 'infer':  # RL training script
             simon = InferInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
             while len(simon.data_parser.unvisited) > 0:

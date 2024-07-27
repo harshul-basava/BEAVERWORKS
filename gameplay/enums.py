@@ -28,6 +28,6 @@ class Job(Enum):
     PESSIMIST = "pessimist"
 
 class JobBaseEffect(Enum):
-    ENGINEER = 45
-    FATTY = 60
+    ENGINEER = 120
+    FATTY = 150
     PESSIMIST = 0.4
