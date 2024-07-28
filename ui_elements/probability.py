@@ -4,8 +4,8 @@ import tkinter as tk
 
 class Probability(object):
     def __init__(self, root, w, h, humanoid, probs):
-        self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.1 * h))
-        self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.6 * h))
+        self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.3 * h))
+        self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.45 * h))
         self.jobs=[]
         self.probab=[]
         self.revealed = False
