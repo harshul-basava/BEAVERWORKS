@@ -79,10 +79,10 @@ class Main(object):
             hard.place(x=490, y=395)
 
             self.root.mainloop()
-            try:
-                self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log=log, suggest=False, probs=self.probs)
-            except:
-                print("Error: no selection made")
+            # try:
+            self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log=log, suggest=False, probs=self.probs)
+            # except:
+            #     print("Error: no selection made")
 
     def show_probs(self, show):
         self.root.destroy()

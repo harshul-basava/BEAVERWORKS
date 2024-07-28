@@ -21,6 +21,7 @@ class UI(object):
         self.root.title("Beaverworks SGAI 2023 - Dead or Alive")
         self.root.geometry(str(w) + 'x' + str(h))
         self.root.resizable(False, False)
+        self.button_menu = None
 
         self.humanoid = data_parser.get_random()
         
@@ -57,8 +58,9 @@ class UI(object):
                                                data_parser,
                                                scorekeeper),
                                            self.prob.update(self.humanoid, probs)]),
-                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid), 
-                                            self.update_ui_reveal(scorekeeper)])]
+                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid),
+                                            self.update_ui_reveal(scorekeeper),
+                                            self.disable_reveal()])]
 
 
         self.button_menu = ButtonMenu(self.root, user_buttons, probs)
@@ -82,7 +84,9 @@ class UI(object):
         init_h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
         init_m = 60 - (scorekeeper.remaining_time % 60)
         self.clock = Clock(self.root, w, h, init_h, init_m)
-        
+
+        if not probs:
+            self.button_menu.buttons[4].config(state="disabled")
         # Display ambulance capacity
         self.capacity_meter = CapacityMeter(self.root, w, h, capacity, probs)
 
@@ -132,3 +136,6 @@ class UI(object):
         # Disable button(s) if options are no longer possible
         self.button_menu.disable_buttons(scorekeeper.remaining_time, remaining, scorekeeper.at_capacity())
 
+    def disable_reveal(self):
+        if self.button_menu:
+            self.button_menu.buttons[4].config(state="disabled")
