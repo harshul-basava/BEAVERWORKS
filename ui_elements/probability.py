@@ -3,16 +3,14 @@ import tkinter as tk
 
 
 class Probability(object):
-    def __init__(self, root, w, h, prob):
+    def __init__(self, root, w, h, humanoid, probs):
         self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.3 * h))
         self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.6 * h))
         self.jobs=[]
         self.probab=[]
         self.revealed = False
-        self.render(prob)
+        self.update(humanoid, probs)
         self.canvas.update()
-        
-        
 
 
     def render_Job(self, job):
@@ -50,7 +48,10 @@ class Probability(object):
             i+=.8
         return
       
-    def update(self, probss):
-        self.render(probss)
+    def update(self, humanoid, display_probs=True):
+        if display_probs:
+            self.render(humanoid.probability)
+        else:
+            self.render_Job(humanoid.job)
         self.canvas.update()
         return

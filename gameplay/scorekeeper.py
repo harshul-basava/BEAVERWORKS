@@ -1,4 +1,4 @@
-from gameplay.enums import ActionCost, ActionState
+from gameplay.enums import ActionCost, ActionState, JobBaseEffect
 import pandas as pd
 from ui_elements.probability import Probability
 import random
@@ -71,7 +71,7 @@ class ScoreKeeper(object):
             log = pd.DataFrame(log)
             log['local_run_id'] = i
             logs.append(log)
-        logs = pd.DataFrame(logs)
+        logs = pd.concat(logs, ignore_index=True)
         logs.to_csv('log.csv')
 
     def save(self, humanoid):
@@ -135,12 +135,14 @@ class ScoreKeeper(object):
             self.scorekeeper["killed"] += self.ambulance["healthy"]
         else:
             self.scorekeeper["saved"] += self.ambulance["healthy"]
+            self.apply_all_job_buffs()
+
 
         self.ambulance["zombie"] = 0
         # self.ambulance["injured"] = 0
         self.ambulance["healthy"] = 0
-        self.apply_all_job_buffs()
-        
+       
+                
         self.carrying = []
 
     def reveal(self, humanoid):
@@ -156,33 +158,34 @@ class ScoreKeeper(object):
     
     # add to remaining time 
     def apply_engineer_buff(self, multiplier):
-        self.remaining_time+=5*multiplier
+        self.remaining_time+=JobBaseEffect.ENGINEER.value*multiplier
         
     # subtract from remaining time
     def apply_fatty_buff(self, multiplier):
-        self.remaining_time-=5*multiplier
+        self.remaining_time-=JobBaseEffect.FATTY.value*multiplier
     
     # for each doctor in ambulance, add one serum
     def apply_doctor_buff(self, multiplier):
-        if (multiplier*100) < random.randint(0, 100):
+        if (multiplier*100) > random.randint(0, 100):
             self.serum += 1
     
-    # for each thug in ambulance, injure one healthy non-thug human
+    # if there is a thug present in the ambulance, each person has a 50% chance of dyind
     def apply_thug_buff(self):
-        return
         for victim in self.carrying:
-            if victim.is_healthy() and not (victim.get_job()=="thug"):
-                victim.set_injured()
-                self.ambulance["injured"]+=1
-                self.ambulance["healthy"]-=1
-                break
+            if victim.get_job()!="thug":
+                if random.random() < .5:
+                    self.scorekeeper["killed"]+=1
+                    self.scorekeeper["saved"]-=1
+            
     
     # applies all job-related buffs, which are only valid if the person is healthy
     def apply_all_job_buffs(self):
         job_counts = Counter(person.get_job() for person in self.carrying if person.is_healthy())
 
-        pessimist_multiplier = 1-(0.2 * job_counts['pessimist'])
- 
+        pessimist_multiplier = 1
+        for i in range(job_counts['pessimist']):
+            pessimist_multiplier*= (1-JobBaseEffect.PESSIMIST.value)
+    
         for _ in range(job_counts["doctor"]):
             self.apply_doctor_buff(pessimist_multiplier)
 
@@ -209,6 +212,8 @@ class ScoreKeeper(object):
             action_dict['reveal'] = False
         if self.at_capacity():
             action_dict['save'] = False
+        if len(self.logger) > 0 and self.logger[-1]['action'] == 'reveal':
+            action_dict['reveal'] = False
         return [action_dict[s.value] for s in ActionState]
         
     # do_action or return false if not possible

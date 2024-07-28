@@ -27,7 +27,23 @@ class Humanoid(object):
     def reveals(self):
         self.revealed=True
         return 
-    
+
+    def reveal_job_probs(self):
+        if self.job == 'doctor':
+            self.raw_probs = [1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        elif self.job == 'engineer':
+            self.raw_probs = [0.0, 1.0, 0.0, 0.0, 0.0, 0.0]
+        elif self.job == 'normal':
+            self.raw_probs = [0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
+        elif self.job == 'thug':
+            self.raw_probs = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0]
+        elif self.job == 'fatty':
+            self.raw_probs = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0]
+        elif self.job == 'pessimist':
+            self.raw_probs = [0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
+        else:
+            pass
+
     # creates probabilities for jobs
     def create_job_probs(self):
         nums = [1.2 ** random.gauss(50, 9) for _ in range(len(Job))]
@@ -40,7 +56,7 @@ class Humanoid(object):
             i = probs.index(max(probs))
             probs[2], probs[i] = probs[i], probs[2]
 
-        self.raw_probs = [prob / 100 for prob in probs]
+        self.raw_probs = [num / sum(nums) for num in nums]
 
         return dict(zip(jobs, probs))
 

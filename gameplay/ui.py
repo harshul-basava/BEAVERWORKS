@@ -13,7 +13,7 @@ from os.path import join
 
 
 class UI(object):
-    def __init__(self, data_parser, scorekeeper, data_fp, suggest, log):
+    def __init__(self, data_parser, scorekeeper, data_fp, suggest, log, probs=True):
         #  Base window setup
         capacity = 10
         w, h = 1280, 800
@@ -21,6 +21,7 @@ class UI(object):
         self.root.title("Beaverworks SGAI 2023 - Dead or Alive")
         self.root.geometry(str(w) + 'x' + str(h))
         self.root.resizable(False, False)
+        self.button_menu = None
 
         self.humanoid = data_parser.get_random()
         
@@ -35,33 +36,34 @@ class UI(object):
                                               data_fp,
                                               data_parser,
                                               scorekeeper), 
-                                            self.prob.update(self.humanoid.probability)]),
+                                          self.prob.update(self.humanoid, probs)]),
                         ("Squish", lambda: [scorekeeper.squish(self.humanoid),
                                             self.update_ui(scorekeeper),
                                             self.get_next(
                                                 data_fp,
                                                 data_parser,
                                                 scorekeeper),
-                                                self.prob.update(self.humanoid.probability)]),
+                                            self.prob.update(self.humanoid, probs)]),
                         ("Save", lambda: [scorekeeper.save(self.humanoid),
                                           self.update_ui(scorekeeper),
                                           self.get_next(
                                               data_fp,
                                               data_parser,
                                               scorekeeper),
-                                              self.prob.update(self.humanoid.probability)]),
+                                          self.prob.update(self.humanoid, probs)]),
                         ("Scram", lambda: [scorekeeper.scram(self.humanoid),
                                            self.update_ui(scorekeeper),
                                            self.get_next(
                                                data_fp,
                                                data_parser,
                                                scorekeeper),
-                                               self.prob.update(self.humanoid.probability)]),
-                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid), 
-                                            self.update_ui_reveal(scorekeeper)])]
+                                           self.prob.update(self.humanoid, probs)]),
+                        ("Reveal", lambda: [scorekeeper.reveal(self.humanoid),
+                                            self.update_ui_reveal(scorekeeper),
+                                            self.disable_reveal()])]
 
 
-        self.button_menu = ButtonMenu(self.root, user_buttons)
+        self.button_menu = ButtonMenu(self.root, user_buttons, probs)
 
         if suggest:
             machine_buttons = [("Suggest", lambda: [self.machine_interface.suggest(self.humanoid)]),
@@ -71,7 +73,7 @@ class UI(object):
                                                     data_fp,
                                                     data_parser,
                                                     scorekeeper),
-                                                    self.prob.update(self.humanoid.probability)])]
+                                                    self.prob.update(self.humanoid, probs)])]
             self.machine_menu = MachineMenu(self.root, machine_buttons)
 
         #  Display central photo
@@ -79,36 +81,31 @@ class UI(object):
         self.root.bind("<Delete>", self.game_viewer.delete_photo)
 
         # Display the countdown
-        init_h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
-        init_m = 60 - (scorekeeper.remaining_time % 60)
-        self.clock = Clock(self.root, w, h, init_h, init_m)
-        
+    
+        self.clock = Clock(self.root, w, h, scorekeeper.remaining_time)
+
+        if not probs:
+            self.button_menu.buttons[4].config(state="disabled")
         # Display ambulance capacity
-        self.capacity_meter = CapacityMeter(self.root, w, h, capacity)
-        
+        self.capacity_meter = CapacityMeter(self.root, w, h, capacity, probs)
+
         # display probabilities
-        self.prob = Probability(self.root, w, h, self.humanoid.probability)
+        self.prob = Probability(self.root, w, h, self.humanoid, probs)
 
         #display serum count
         self.serums = Serum(self.root, w, h, scorekeeper.serum)
 
-        
-
         self.root.mainloop()
 
-    
-
     def update_ui(self, scorekeeper):
-        h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
-        m = 60 - (scorekeeper.remaining_time % 60)
-        self.clock.update_time(h, m)
+        
+        self.clock.update_time(scorekeeper.remaining_time)
         self.serums.update(scorekeeper.serum)
 
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
+
     def update_ui_reveal(self, scorekeeper):
-        h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
-        m = 60 - (scorekeeper.remaining_time % 60)
-        self.clock.update_time(h, m)
+        self.clock.update_time(scorekeeper.remaining_time)
         self.prob.render_Job(self.humanoid.job)
        
     def on_resize(self, event):
@@ -135,3 +132,6 @@ class UI(object):
         # Disable button(s) if options are no longer possible
         self.button_menu.disable_buttons(scorekeeper.remaining_time, remaining, scorekeeper.at_capacity())
 
+    def disable_reveal(self):
+        if self.button_menu:
+            self.button_menu.buttons[4].config(state="disabled")
