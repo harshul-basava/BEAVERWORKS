@@ -127,7 +127,11 @@ class TrainInterface(Env):
             elif action == "scram":
                 self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_classes']))
                 self.observation_space["vehicle_storage_job_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_jobs']))
-            self.get_humanoid(pred=False)
+            if action == "reveal":
+                self.humanoid.reveal_job_probs()
+                self.job_probs = self.humanoid.raw_probs
+            else:
+                self.get_humanoid(pred=False)
         else:
             reward -= 0.5
         

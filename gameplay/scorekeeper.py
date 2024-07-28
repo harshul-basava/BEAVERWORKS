@@ -212,6 +212,8 @@ class ScoreKeeper(object):
             action_dict['reveal'] = False
         if self.at_capacity():
             action_dict['save'] = False
+        if len(self.logger) > 0 and self.logger[-1]['action'] == 'reveal':
+            action_dict['reveal'] = False
         return [action_dict[s.value] for s in ActionState]
         
     # do_action or return false if not possible
