@@ -7,8 +7,8 @@ from PIL import ImageTk, Image
 
 class GameViewer(object):
     def __init__(self, root, w, h, data_fp, humanoid):
-        self.canvas = tk.Canvas(root, width=math.floor(0.5 * w), height=math.floor(0.75 * h))
-        self.canvas.place(x=300, y=100)
+        self.canvas = tk.Canvas(root, width=math.floor(0.9 * 0.5 * w), height=math.floor(0.9 * 0.75 * h))
+        self.canvas.place(x=350, y=50)
         self.canvas.update()
         
         self.photo = None
