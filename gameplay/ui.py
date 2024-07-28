@@ -81,9 +81,8 @@ class UI(object):
         self.root.bind("<Delete>", self.game_viewer.delete_photo)
 
         # Display the countdown
-        init_h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
-        init_m = 60 - (scorekeeper.remaining_time % 60)
-        self.clock = Clock(self.root, w, h, init_h, init_m)
+    
+        self.clock = Clock(self.root, w, h, scorekeeper.remaining_time)
 
         if not probs:
             self.button_menu.buttons[4].config(state="disabled")
@@ -99,17 +98,14 @@ class UI(object):
         self.root.mainloop()
 
     def update_ui(self, scorekeeper):
-        h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
-        m = 60 - (scorekeeper.remaining_time % 60)
-        self.clock.update_time(h, m)
+        
+        self.clock.update_time(scorekeeper.remaining_time)
         self.serums.update(scorekeeper.serum)
 
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
 
     def update_ui_reveal(self, scorekeeper):
-        h = (12 - (math.floor(scorekeeper.remaining_time / 60.0)))
-        m = 60 - (scorekeeper.remaining_time % 60)
-        self.clock.update_time(h, m)
+        self.clock.update_time(scorekeeper.remaining_time)
         self.prob.render_Job(self.humanoid.job)
        
     def on_resize(self, event):
