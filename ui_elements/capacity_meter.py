@@ -7,7 +7,7 @@ from tktooltip import ToolTip
 
 
 class CapacityMeter(object):
-    def __init__(self, root, w, h, max_cap):
+    def __init__(self, root, w, h, max_cap, probs):
         self.root = root
         self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.3 * h))
         self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.4 * h))
@@ -15,6 +15,7 @@ class CapacityMeter(object):
         self.unit_size = 34  # resized in order to make two rows of 5
         self.canvas.update()
         self.render(max_cap, self.unit_size)
+        self.probs = probs
 
     def render(self, max_cap, size):
         tk.Label(self.canvas, text="Capacity", font=("Arial", 15)).place(x=100, y=0)
@@ -47,9 +48,9 @@ class CapacityMeter(object):
                 unit.unbind("<Leave>")
 
     def toolTipCreator(self, unit, probability, job):  # assigns the relevant toolTip information
-        if type(job) is str:
+        if not self.probs and type(job) is str:
             ToolTip(unit, msg=job)  # displays the job class of the humanoid just saved if known
-        elif type(probability) is dict:
+        elif self.probs and type(probability) is dict:
             msg = ""
             for k, v in probability.items():
                 msg += f"{k}: {v}%\n"

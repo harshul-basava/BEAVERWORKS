@@ -9,6 +9,8 @@ from gameplay.scorekeeper import ScoreKeeper
 from gameplay.ui import UI
 from gameplay.enums import ActionCost
 from model_training.rl_training import train
+from tkmacosx import Button
+import tkinter as tk
 
 
 class Main(object):
@@ -18,6 +20,8 @@ class Main(object):
     def __init__(self, mode, log):
         self.data_fp = os.getenv("SGAI_DATA", default='data')
         self.data_parser = DataParser(self.data_fp)
+
+        self.root = tk.Tk()
 
         shift_length = 720
         capacity = 10
@@ -68,8 +72,23 @@ class Main(object):
             print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())
             print(self.scorekeeper.get_score())
         else: # Launch UI gameplay
-            self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log = log, suggest = False)
+            self.root.geometry("1280x800")
 
+            easy = Button(self.root, text='Easy', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(False))
+            hard = Button(self.root, text='Hard', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(True))
+
+            easy.place(x=490, y=265)
+            hard.place(x=490, y=395)
+
+            self.root.mainloop()
+            # try:
+            self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log=log, suggest=False, probs=self.probs)
+            # except:
+            #     print("Error: no selection made")
+
+    def show_probs(self, show):
+        self.root.destroy()
+        self.probs = show
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

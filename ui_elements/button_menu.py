@@ -6,10 +6,11 @@ from gameplay.enums import ActionCost
 
 
 class ButtonMenu(object):
-    def __init__(self, root, items):
+    def __init__(self, root, items, probs=True):
         self.canvas = tk.Canvas(root, width=500, height=80)
         self.canvas.place(x=100, y=150)
         self.buttons = create_buttons(self.canvas, items)
+        self.probs = probs
         create_menu(self.buttons)
 
     def disable_buttons(self, remaining_time, remaining_humanoids, at_capacity):
@@ -37,6 +38,8 @@ class ButtonMenu(object):
             self.buttons[0].config(state="disabled")
             self.buttons[1].config(state="disabled")
             self.buttons[2].config(state="disabled")
+            self.buttons[4].config(state="disabled")
+        if not self.probs:
             self.buttons[4].config(state="disabled")
 
 
