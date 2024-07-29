@@ -10,6 +10,7 @@ from gameplay.ui import UI
 from gameplay.enums import ActionCost
 from model_training.rl_training import train
 from tkmacosx import Button
+from PIL import ImageTk, Image
 import tkinter as tk
 
 
@@ -73,12 +74,17 @@ class Main(object):
             print(self.scorekeeper.get_score())
         else: # Launch UI gameplay
             self.root.geometry("1280x800")
-            self.root.configure(bg='black')
-            easy = Button(self.root, text='Easy', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(False))
-            hard = Button(self.root, text='Hard', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(True))
+            self.image = ImageTk.PhotoImage(Image.open(f"ui_elements/graphics/Team_Husk.png"))
+            label1 = tk.Label(self.root, image=self.image)
+            label1.place(x=0, y=0)
+            self.mode_1 = ImageTk.PhotoImage(Image.open(f"ui_elements/graphics/Mode1.png").resize((283, 92), Image.LANCZOS))
+            self.mode_2 = ImageTk.PhotoImage(Image.open(f"ui_elements/graphics/Mode2.png").resize((283, 92), Image.LANCZOS))
 
-            easy.place(x=490, y=265)
-            hard.place(x=490, y=395)
+            easy = Button(self.root, image=self.mode_1, width=280, height=90, command=lambda: self.show_probs(False), highlightbackground="#F8EDE0")
+            hard = Button(self.root, image=self.mode_2, width=280, height=90, command=lambda: self.show_probs(True), highlightbackground="#F8EDE0")
+
+            easy.place(x=30, y=128)
+            hard.place(x=315, y=128)
 
             self.root.mainloop()
             # try:
