@@ -7,7 +7,9 @@ from gameplay.enums import ActionCost
 
 class ButtonMenu(object):
     def __init__(self, root, items, probs=True):
-        self.canvas = tk.Canvas(root, width=500, height=80)
+        self.canvas = tk.Canvas(root, width=500, height=80, highlightbackground='lightgreen')
+        self.canvas.configure(bg='lightgreen')
+        
 
         rgb = tuple((c//256 for c in root.winfo_rgb(root.cget("bg"))))
 

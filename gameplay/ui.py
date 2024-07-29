@@ -18,9 +18,12 @@ class UI(object):
         capacity = 10
         w, h = 1280, 800
         self.root = tk.Tk()
+
         self.root.title("Beaverworks SGAI 2023 - Dead or Alive")
         self.root.geometry(str(w) + 'x' + str(h))
         self.root.resizable(False, False)
+        self.root.configure(bg='lightgreen')
+
         self.button_menu = None
 
         self.humanoid = data_parser.get_random()

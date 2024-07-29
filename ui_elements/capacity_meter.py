@@ -12,8 +12,9 @@ class CapacityMeter(object):
         self.w = w
         self.h = h
 
-        self.canvas = tk.Canvas(root, width=math.floor(0.9 * w), height=math.floor(0.1 * h))
+        self.canvas = tk.Canvas(root, width=math.floor(1.0 * w), height=math.floor(0.1 * h), highlightbackground='lightgreen')
         self.canvas.place(x=math.floor(0.06 * w), y=math.floor(0.8 * h))
+        self.canvas.configure(bg='lightgreen')
         self.__units = []
         self.unit_size = 77  # resized in order to make two rows of 5
         self.canvas.update()
@@ -22,7 +23,7 @@ class CapacityMeter(object):
 
 
     def render(self, max_cap, size):
-        title = tk.Label(self.root, text="capacity", font=("Arial", 30))
+        title = tk.Label(self.root, text="capacity", font=("Arial", 30), bg = 'lightgreen')
         title.pack(side='bottom', anchor='center', pady=30)
         # title.place(x=(self.root.winfo_width() - title.winfo_width()) // 2, y=math.floor(0.95 * self.h))
 

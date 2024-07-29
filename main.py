@@ -73,7 +73,7 @@ class Main(object):
             print(self.scorekeeper.get_score())
         else: # Launch UI gameplay
             self.root.geometry("1280x800")
-
+            self.root.configure(bg='black')
             easy = Button(self.root, text='Easy', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(False))
             hard = Button(self.root, text='Hard', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(True))
 
@@ -83,6 +83,7 @@ class Main(object):
             self.root.mainloop()
             # try:
             self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log=log, suggest=False, probs=self.probs)
+
             # except:
             #     print("Error: no selection made")
 
