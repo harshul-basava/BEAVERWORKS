@@ -109,6 +109,16 @@ class UI(object):
         self.capacity_meter.update_fill(scorekeeper.get_current_capacity(), scorekeeper.logger[-1])
 
     def update_ui_reveal(self, scorekeeper):
+        for label in self.prob.empties:
+            label.destroy()
+
+        self.prob.empties = []
+
+        for bar in self.prob.fills:
+            bar.destroy()
+
+        self.prob.fills = []
+
         self.clock.update_time(scorekeeper.remaining_time)
         self.prob.render_Job(self.humanoid.job)
        
@@ -136,4 +146,6 @@ class UI(object):
         # Disable button(s) if options are no longer possible
         self.button_menu.disable_buttons(scorekeeper.remaining_time, remaining, scorekeeper.at_capacity())
 
-
+    def disable_reveal(self):
+        if self.button_menu:
+            self.button_menu.disable_reveal()
