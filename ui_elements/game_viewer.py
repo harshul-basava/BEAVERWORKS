@@ -1,15 +1,15 @@
 import math
 import tkinter as tk
-
+from gameplay.enums import bgc
 from os.path import join
 from PIL import ImageTk, Image
 
 
 class GameViewer(object):
     def __init__(self, root, w, h, data_fp, humanoid):
-        self.canvas = tk.Canvas(root, width=math.floor(0.9 * 0.5 * w), height=math.floor(0.9 * 0.75 * h), highlightbackground='lightgreen')
+        self.canvas = tk.Canvas(root, width=math.floor(0.9 * 0.5 * w), height=math.floor(0.9 * 0.75 * h), highlightbackground='midnightblue')
         self.canvas.place(x=350, y=50)
-        self.canvas.configure(bg='lightgreen')
+        self.canvas.configure(bg=bgc)
         self.canvas.update()
         
         
@@ -26,9 +26,9 @@ class GameViewer(object):
 
         
     def display_score(self, score):
-        tk.Label(self.canvas, text="FINAL SCORE", font=("Arial", 30), bg = 'lightgreen').pack(anchor=tk.NW)
-        tk.Label(self.canvas, text="Killed {}".format(score["killed"]), font=("Arial", 15), bg = 'lightgreen').pack(anchor=tk.NW)
-        tk.Label(self.canvas, text="Saved {}".format(score["saved"]), font=("Arial", 15), bg = 'lightgreen').pack(anchor=tk.NW)
+        tk.Label(self.canvas, text="FINAL SCORE", font=("Arial", 30), bg = bgc).pack(anchor=tk.NW)
+        tk.Label(self.canvas, text="Killed {}".format(score["killed"]), font=("Arial", 15), bg = bgc).pack(anchor=tk.NW)
+        tk.Label(self.canvas, text="Saved {}".format(score["saved"]), font=("Arial", 15), bg = bgc).pack(anchor=tk.NW)
 
 
 

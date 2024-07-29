@@ -1,11 +1,11 @@
 import tkinter as tk
-
+from gameplay.enums import bgc
 
 class MachineMenu(object):
     def __init__(self, root, items):
-        self.canvas = tk.Canvas(root, width=500, height=80, highlightbackground='lightgreen')
+        self.canvas = tk.Canvas(root, width=500, height=80, highlightbackground=bgc)
         self.canvas.place(x=450, y=720)
-        self.canvas.configure(bg='lightgreen')
+        self.canvas.configure(bg=bgc)
         self.buttons = create_buttons(self.canvas, items)
         create_menu(self.buttons)
 

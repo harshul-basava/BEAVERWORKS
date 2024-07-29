@@ -1,14 +1,15 @@
 import tkinter as tk
 import os
 import math
+from gameplay.enums import bgc
 
 
 # class
 class Clock(object):
     def __init__(self, root, w, h, remainingTime):
-        self.canvas = tk.Canvas(root, width=math.floor(0.22 * w), height=math.floor(0.3 * h), highlightbackground='lightgreen')
+        self.canvas = tk.Canvas(root, width=math.floor(0.22 * w), height=math.floor(0.3 * h), highlightbackground=bgc)
         self.canvas.place(x=math.floor(0.75 * w), y=50)
-        self.canvas.configure(bg='lightgreen')
+        self.canvas.configure(bg=bgc)
         self.image = None
         self.x = 150  # Center Point x
         self.y = 150  # Center Point
@@ -18,7 +19,7 @@ class Clock(object):
         self.update_time(remainingTime)
 
     def render(self):
-        tk.Label(self.canvas, text="Remaining time", font=("Arial", 15), bg = 'lightgreen').place(x=80, y=50)
+        tk.Label(self.canvas, text="Remaining time", font=("Arial", 15), bg = bgc).place(x=80, y=50)
         self.generate_bg()
         return
 

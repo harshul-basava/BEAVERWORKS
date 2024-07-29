@@ -8,6 +8,7 @@ from ui_elements.game_viewer import GameViewer
 from ui_elements.machine_menu import MachineMenu
 from ui_elements.probability import Probability
 from ui_elements.serum import Serum
+from gameplay.enums import bgc
 
 from os.path import join
 
@@ -22,7 +23,7 @@ class UI(object):
         self.root.title("Beaverworks SGAI 2023 - Dead or Alive")
         self.root.geometry(str(w) + 'x' + str(h))
         self.root.resizable(False, False)
-        self.root.configure(bg='lightgreen')
+        self.root.configure(bg=bgc)
 
         self.button_menu = None
 

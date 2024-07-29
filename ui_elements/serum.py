@@ -1,12 +1,13 @@
 import math
 import tkinter as tk
+from gameplay.enums import bgc
 
 
 class Serum(object):
     def __init__(self, root, w, h, count):
-        self.canvas = tk.Canvas(root, width=math.floor(0.1 * w), height=math.floor(0.05 * h), highlightbackground='lightgreen')
+        self.canvas = tk.Canvas(root, width=math.floor(0.1 * w), height=math.floor(0.05 * h), highlightbackground=bgc)
         self.canvas.place(x=math.floor(0.8 * w), y=math.floor(0.38 * h))
-        self.canvas.configure(bg='lightgreen')
+        self.canvas.configure(bg=bgc)
         self.serums=[]
         self.render(count)
         self.canvas.update()
@@ -18,7 +19,7 @@ class Serum(object):
                 serum.destroy()
         
 
-        self.serums.append(tk.Label(self.canvas, text="Serums: " + str(count), font=("Arial", 15), bg = 'lightgreen'))
+        self.serums.append(tk.Label(self.canvas, text="Serums: " + str(count), font=("Arial", 15), bg = bgc))
         self.serums[len(self.serums)-1].place(x=30, y=10)
         self.canvas.update()
 

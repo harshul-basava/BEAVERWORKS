@@ -31,3 +31,6 @@ class JobBaseEffect(Enum):
     ENGINEER = 120
     FATTY = 150
     PESSIMIST = 0.4
+
+
+bgc = '#5671b0'

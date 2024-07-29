@@ -1,7 +1,7 @@
 import math
 import tkinter as tk
 from tkmacosx import Button
-
+from gameplay.enums import bgc
 # TODO - need to install: pip install tkinter-tooltip
 from tktooltip import ToolTip
 
@@ -12,9 +12,9 @@ class CapacityMeter(object):
         self.w = w
         self.h = h
 
-        self.canvas = tk.Canvas(root, width=math.floor(1.0 * w), height=math.floor(0.1 * h), highlightbackground='lightgreen')
+        self.canvas = tk.Canvas(root, width=math.floor(1.0 * w), height=math.floor(0.1 * h), highlightbackground=bgc)
         self.canvas.place(x=math.floor(0.06 * w), y=math.floor(0.8 * h))
-        self.canvas.configure(bg='lightgreen')
+        self.canvas.configure(bg=bgc)
         self.__units = []
         self.unit_size = 77  # resized in order to make two rows of 5
         self.canvas.update()
@@ -23,7 +23,7 @@ class CapacityMeter(object):
 
 
     def render(self, max_cap, size):
-        title = tk.Label(self.root, text="capacity", font=("Arial", 30), bg = 'lightgreen')
+        title = tk.Label(self.root, text="capacity", font=("Arial", 30), bg = bgc)
         title.pack(side='bottom', anchor='center', pady=30)
         # title.place(x=(self.root.winfo_width() - title.winfo_width()) // 2, y=math.floor(0.95 * self.h))
 

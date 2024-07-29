@@ -1,14 +1,15 @@
 import tkinter as tk
 import os
 from PIL import ImageTk, Image
+from gameplay.enums import bgc
 
 from gameplay.enums import ActionCost
 
 
 class ButtonMenu(object):
     def __init__(self, root, items, probs=True):
-        self.canvas = tk.Canvas(root, width=500, height=80, highlightbackground='lightgreen')
-        self.canvas.configure(bg='lightgreen')
+        self.canvas = tk.Canvas(root, width=500, height=80, highlightbackground=bgc)
+        self.canvas.configure(bg=bgc)
         
 
         rgb = tuple((c//256 for c in root.winfo_rgb(root.cget("bg"))))

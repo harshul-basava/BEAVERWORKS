@@ -1,12 +1,13 @@
 import math
 import tkinter as tk
+from gameplay.enums import bgc
 
 
 class Probability(object):
     def __init__(self, root, w, h, humanoid, probs):
-        self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.3 * h), highlightbackground='lightgreen')
+        self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.3 * h), highlightbackground=bgc)
         self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.45 * h))
-        self.canvas.configure(bg='lightgreen')
+        self.canvas.configure(bg=bgc)
         self.jobs=[]
         self.probab=[]
         self.revealed = False
@@ -22,7 +23,7 @@ class Probability(object):
         if len(self.probab)>0:
             for pro in self.probab:
                 pro.destroy()
-        self.jobs.append(tk.Label(self.canvas, text="Job: " + job, font=("Arial", 15), bg = 'lightgreen'))
+        self.jobs.append(tk.Label(self.canvas, text="Job: " + job, font=("Arial", 15), bg = bgc))
         self.jobs[len(self.jobs)-1].place(x=80, y=30)
         self.revealed=True
         self.canvas.update()
@@ -35,16 +36,16 @@ class Probability(object):
             for pro in self.probab:
                 pro.destroy()
 
-        self.probab.append(tk.Label(self.canvas, text="Probability", font=("Arial", 15), bg = 'lightgreen'))
+        self.probab.append(tk.Label(self.canvas, text="Probability", font=("Arial", 15), bg = bgc))
         self.probab[len(self.probab)-1].place(x=80, y=30)
 
         i=0
         for job, prob in sorted(probs.items(), key=lambda item: item[1], reverse=True):
-            self.probab.append(tk.Label(self.canvas, text=job, font=("Arial", 10), bg = 'lightgreen'))
+            self.probab.append(tk.Label(self.canvas, text=job, font=("Arial", 10), bg = bgc))
             self.probab[len(self.probab)-1].place(x=70, y=80+30*i)
 
             
-            self.probab.append(tk.Label(self.canvas, text=str(prob)+"%", font=("Arial", 10), bg = 'lightgreen'))
+            self.probab.append(tk.Label(self.canvas, text=str(prob)+"%", font=("Arial", 10), bg = bgc))
             self.probab[len(self.probab)-1].place(x=160, y=80 + 30 * i)
             i+=.8
         return
