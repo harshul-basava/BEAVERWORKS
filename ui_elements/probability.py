@@ -72,7 +72,7 @@ class Probability(object):
             panel.place(x=145, y=103 + i)
             self.empties.append(panel)
 
-            self.tk_fills.append(ImageTk.PhotoImage(self.fill.resize((math.floor(prob), 16), Image.LANCZOS)))
+            self.tk_fills.append(ImageTk.PhotoImage(self.fill.resize((math.floor(prob) + 1, 16), Image.LANCZOS)))
             filling = tk.Label(self.canvas, image=self.tk_fills[-1])
             filling.place(x=145, y=103 + i)
             self.fills.append(filling)
