@@ -2,6 +2,7 @@ from gameplay.enums import ActionCost, ActionState, JobBaseEffect
 import pandas as pd
 from ui_elements.probability import Probability
 import random
+import os
 from collections import Counter
 
 
@@ -59,11 +60,21 @@ class ScoreKeeper(object):
                             "capacity": self.get_current_capacity(),
                             })
         
-    def save_log(self,):
+    def save_log(self, mode, diff=None):
         """
         Saves a single log.csv file containing the actions that were taken,and the humanoids presented at the time. 
         Note: will overwrite previous logs
         """
+
+        if mode == 'player':
+            fp = 'data_logs_players'
+            current_num_files = next(os.walk(fp))[2]
+            run_num = len(current_num_files)
+        elif mode == 'rl':
+            fp = 'data_logs_RL'
+            current_num_files = next(os.walk(fp))[2]
+            run_num = len(current_num_files)
+
         if len(self.logger) > 0:
             self.all_logs.append(self.logger)
         logs = []
@@ -72,7 +83,12 @@ class ScoreKeeper(object):
             log['local_run_id'] = i
             logs.append(log)
         logs = pd.concat(logs, ignore_index=True)
-        logs.to_csv('log.csv')
+        if mode == "player":
+            logs.to_csv(f'{fp}/log_{run_num}_{diff}.csv')
+        elif mode == "rl":
+            logs.to_csv(f'{fp}/log_{run_num}.csv')
+        else:
+            logs.to_csv(f'log.csv')
 
     def save(self, humanoid):
         """

@@ -83,13 +83,17 @@ class Main(object):
             self.root.mainloop()
             # try:
             self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log=log, suggest=False, probs=self.probs)
-
+            self.scorekeeper.save_log("player", self.diff)
             # except:
             #     print("Error: no selection made")
 
     def show_probs(self, show):
         self.root.destroy()
         self.probs = show
+        if show:
+            self.diff = "hard"
+        else:
+            self.diff = "easy"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
