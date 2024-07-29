@@ -24,12 +24,12 @@ class Job(Enum):
     ENGINEER = "engineer"
     THUG = "thug"
     NORMAL = "normal"
-    FATTY = "fatty"
+    IMPOSTER = "imposter"
     PESSIMIST = "pessimist"
 
 class JobBaseEffect(Enum):
     ENGINEER = 120
-    FATTY = 150
+    IMPOSTER = 150
     PESSIMIST = 0.4
 
 

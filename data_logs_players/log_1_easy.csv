@@ -1,0 +1,4 @@
+,local_run_id,humanoid_class,humanoid_fp,humanoid_probs,humanoid_job,action,remaining_time,capacity
+0,1,healthy,consolidated_dataset/test_00102.png,"{'doctor': 21, 'engineer': 2, 'normal': 32, 'thug': 40, 'fatty': 3, 'pessimist': 2}",thug,scram,720.0,0.0
+1,1,healthy,consolidated_dataset/test_00065.png,"{'doctor': 35, 'engineer': 2, 'normal': 3, 'thug': 3, 'fatty': 30, 'pessimist': 26}",doctor,save,670.0,0.0
+2,1,healthy,consolidated_dataset/test_00194.png,"{'doctor': 8, 'engineer': 2, 'normal': 23, 'thug': 16, 'fatty': 26, 'pessimist': 25}",normal,scram,640.0,1.0

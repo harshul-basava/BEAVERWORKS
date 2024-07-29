@@ -68,21 +68,27 @@ class ActorCritic(nn.Module):
         
         self.actor = nn.Sequential(
                         BaseModel(),
-                        nn.Linear(self.obs_dim, 32),
+                        nn.Linear(self.obs_dim, 256),
                         nn.ReLU(),
-                        nn.Linear(32,32),
+                        nn.Linear(256, 256),
                         nn.ReLU(),
-                        nn.Linear(32, self.action_dim),
+                        nn.Linear(256, 128),
+                        nn.ReLU(),
+                        nn.Linear(128, self.action_dim),
                         nn.Softmax(dim=-1)
                     )
         # critic
         self.critic = nn.Sequential(
                         BaseModel(),
-                        nn.Linear(self.obs_dim, 32),
+                        nn.Linear(self.obs_dim, 256),
                         nn.ReLU(),
-                        nn.Linear(32,32),
+                        nn.Linear(256, 256),
                         nn.ReLU(),
-                        nn.Linear(32, 1)
+                        nn.Linear(256, 128),
+                        nn.ReLU(),
+                        nn.Linear(128, 64),
+                        nn.ReLU(),
+                        nn.Linear(64, 1)
                     )
         
     def set_action_std(self, new_action_std):

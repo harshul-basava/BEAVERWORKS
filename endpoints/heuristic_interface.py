@@ -27,7 +27,7 @@ class Predictor(object):
         if not self.is_model_loaded:
             warnings.warn("Model not loaded, resorting to random prediction")
 
-    def _load_model(self, weights_path, num_classes=2):
+    def _load_model(self, weights_path, num_classes=4):
         try:
             self.net = DefaultCNN(num_classes)
             self.net.load_state_dict(torch.load(weights_path))

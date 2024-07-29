@@ -1,0 +1,9 @@
+,local_run_id,humanoid_class,humanoid_fp,humanoid_probs,humanoid_job,action,remaining_time,capacity
+0,1,zombie,consolidated_dataset/test_00024.png,"{'doctor': 34, 'engineer': 3, 'normal': 60, 'thug': 1, 'fatty': 1, 'pessimist': 1}",doctor,squish,720.0,0.0
+1,1,zombie,consolidated_dataset/test_00110.png,"{'doctor': 4, 'engineer': 3, 'normal': 20, 'thug': 40, 'fatty': 32, 'pessimist': 1}",normal,squish,705.0,0.0
+2,1,healthy,consolidated_dataset/test_00189.png,"{'doctor': 86, 'engineer': 2, 'normal': 0, 'thug': 5, 'fatty': 6, 'pessimist': 1}",doctor,squish,690.0,0.0
+3,1,healthy,consolidated_dataset/test_00186.png,"{'doctor': 0, 'engineer': 14, 'normal': 22, 'thug': 29, 'fatty': 7, 'pessimist': 27}",pessimist,save,675.0,0.0
+4,1,zombie,consolidated_dataset/test_00029.png,"{'doctor': 67, 'engineer': 2, 'normal': 20, 'thug': 8, 'fatty': 0, 'pessimist': 3}",doctor,save,645.0,1.0
+5,1,healthy,consolidated_dataset/test_00119.png,"{'doctor': 90, 'engineer': 1, 'normal': 4, 'thug': 0, 'fatty': 4, 'pessimist': 0}",fatty,reveal,615.0,2.0
+6,1,healthy,consolidated_dataset/test_00119.png,"{'doctor': 90, 'engineer': 1, 'normal': 4, 'thug': 0, 'fatty': 4, 'pessimist': 0}",fatty,skip,585.0,2.0
+7,1,zombie,consolidated_dataset/test_00061.png,"{'doctor': 3, 'engineer': 7, 'normal': 50, 'thug': 2, 'fatty': 18, 'pessimist': 19}",normal,skip,565.0,2.0

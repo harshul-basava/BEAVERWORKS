@@ -4,13 +4,12 @@ from endpoints.data_parser import DataParser
 from endpoints.heuristic_interface import HeuristicInterface
 from endpoints.training_interface import TrainInterface
 from endpoints.inference_interface import InferInterface
+from plot_logs import Plot
 
 from gameplay.scorekeeper import ScoreKeeper
 from gameplay.ui import UI
 from gameplay.enums import ActionCost
 from model_training.rl_training import train
-from tkmacosx import Button
-import tkinter as tk
 
 
 class Main(object):
@@ -20,8 +19,6 @@ class Main(object):
     def __init__(self, mode, log):
         self.data_fp = os.getenv("SGAI_DATA", default='data')
         self.data_parser = DataParser(self.data_fp)
-
-        self.root = tk.Tk()
 
         shift_length = 720
         capacity = 10
@@ -57,9 +54,16 @@ class Main(object):
             env = TrainInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
             train(env)
             if log:
-                self.scorekeeper.save_log()
+                self.scorekeeper.save_log('rl')
+                Plot.plot_actions('log.csv')
         elif mode == 'infer':  # RL training script
-            simon = InferInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
+            simon = InferInterface(
+                root=None,
+                w=None,
+                h=None,
+                data_parser=self.data_parser,
+                scorekeeper=self.scorekeeper,
+            )
             while len(simon.data_parser.unvisited) > 0:
                 if simon.scorekeeper.remaining_time <= 0:
                     break
@@ -68,32 +72,13 @@ class Main(object):
                     simon.act(humanoid)
             self.scorekeeper = simon.scorekeeper
             if log:
-                self.scorekeeper.save_log()
+                self.scorekeeper.save_log('rl')
+                Plot.plot_actions('log.csv')
             print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())
             print(self.scorekeeper.get_score())
         else: # Launch UI gameplay
-            self.root.geometry("1280x800")
-            self.root.configure(bg='black')
-            easy = Button(self.root, text='Easy', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(False))
-            hard = Button(self.root, text='Hard', font=("Arial", 25), width=300, height=100, command=lambda: self.show_probs(True))
+            self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log = log, suggest = False)
 
-            easy.place(x=490, y=265)
-            hard.place(x=490, y=395)
-
-            self.root.mainloop()
-            # try:
-            self.ui = UI(self.data_parser, self.scorekeeper, self.data_fp, log=log, suggest=False, probs=self.probs)
-            self.scorekeeper.save_log("player", self.diff)
-            # except:
-            #     print("Error: no selection made")
-
-    def show_probs(self, show):
-        self.root.destroy()
-        self.probs = show
-        if show:
-            self.diff = "hard"
-        else:
-            self.diff = "easy"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
