@@ -4,8 +4,8 @@ import tkinter as tk
 
 class Serum(object):
     def __init__(self, root, w, h, count):
-        self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.3 * h))
-        self.canvas.place(x=math.floor(0.03 * w), y=math.floor(0.6 * h))
+        self.canvas = tk.Canvas(root, width=math.floor(0.1 * w), height=math.floor(0.05 * h))
+        self.canvas.place(x=math.floor(0.8 * w), y=math.floor(0.38 * h))
         self.serums=[]
         self.render(count)
         self.canvas.update()
@@ -18,7 +18,7 @@ class Serum(object):
         
 
         self.serums.append(tk.Label(self.canvas, text="Serums: " + str(count), font=("Arial", 15)))
-        self.serums[len(self.serums)-1].place(x=80, y=30)
+        self.serums[len(self.serums)-1].place(x=30, y=10)
         self.canvas.update()
 
         return

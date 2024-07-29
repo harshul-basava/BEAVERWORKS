@@ -85,7 +85,7 @@ class UI(object):
         self.clock = Clock(self.root, w, h, scorekeeper.remaining_time)
 
         if not probs:
-            self.button_menu.buttons[4].config(state="disabled")
+            self.button_menu.disable_reveal()
         # Display ambulance capacity
         self.capacity_meter = CapacityMeter(self.root, w, h, capacity, probs)
 
@@ -132,6 +132,4 @@ class UI(object):
         # Disable button(s) if options are no longer possible
         self.button_menu.disable_buttons(scorekeeper.remaining_time, remaining, scorekeeper.at_capacity())
 
-    def disable_reveal(self):
-        if self.button_menu:
-            self.button_menu.buttons[4].config(state="disabled")
+
