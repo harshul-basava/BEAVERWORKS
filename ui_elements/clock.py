@@ -35,7 +35,7 @@ class Clock(object):
 
         if len(hours)<2:
             hours='0'+hours
-        minutes = str(remainingTime%60)
+        minutes = str(int(remainingTime%60))
         if len(minutes)<2:
             minutes='0'+minutes
         if(remainingTime<=0):
