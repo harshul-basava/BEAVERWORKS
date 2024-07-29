@@ -4,17 +4,22 @@
 import pandas
 import matplotlib.pyplot as plt
 
-df = pandas.read_csv('log.csv', usecols=['local_run_id', 'action'])
+class Plot:
+    def __init__(self, file_path):
+        self.file_path = file_path
 
-action_counts = df['action'].value_counts()
+    def plot_actions(self):
 
-plt.figure(figsize=(10, 6))
-action_counts.plot(kind='bar')
-plt.title('Actions taken in the last game')
-plt.xlabel('Action')
-plt.ylabel('Count')
-plt.xticks(rotation=45)
-plt.tight_layout()
+        df = pandas.read_csv(self.file_path, usecols=['local_run_id', 'action'])
 
-plt.show()
-plt.show()
+        action_counts = df['action'].value_counts()
+
+        plt.figure(figsize=(10, 6))
+        action_counts.plot(kind='bar')
+        plt.title('Actions taken in the last game')
+        plt.xlabel('Action')
+        plt.ylabel('Count')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+
+        plt.show()

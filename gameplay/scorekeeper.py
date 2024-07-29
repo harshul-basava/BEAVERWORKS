@@ -177,8 +177,8 @@ class ScoreKeeper(object):
         self.remaining_time+=JobBaseEffect.ENGINEER.value*multiplier
         
     # subtract from remaining time
-    def apply_fatty_buff(self, multiplier):
-        self.remaining_time-=JobBaseEffect.FATTY.value*multiplier
+    def apply_imposter_buff(self, multiplier):
+        self.remaining_time-=JobBaseEffect.IMPOSTER.value*multiplier
     
     # for each doctor in ambulance, add one serum
     def apply_doctor_buff(self, multiplier):
@@ -208,8 +208,8 @@ class ScoreKeeper(object):
         for _ in range(job_counts["engineer"]):
             self.apply_engineer_buff(pessimist_multiplier)
         
-        for _ in range(job_counts["fatty"]):
-            self.apply_fatty_buff(pessimist_multiplier)
+        for _ in range(job_counts["imposter"]):
+            self.apply_imposter_buff(pessimist_multiplier)
         
         for _ in range(job_counts["thug"]):
             self.apply_thug_buff()

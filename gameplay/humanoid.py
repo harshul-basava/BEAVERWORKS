@@ -37,7 +37,7 @@ class Humanoid(object):
             self.raw_probs = [0.0, 0.0, 1.0, 0.0, 0.0, 0.0]
         elif self.job == 'thug':
             self.raw_probs = [0.0, 0.0, 0.0, 1.0, 0.0, 0.0]
-        elif self.job == 'fatty':
+        elif self.job == 'imposter':
             self.raw_probs = [0.0, 0.0, 0.0, 0.0, 1.0, 0.0]
         elif self.job == 'pessimist':
             self.raw_probs = [0.0, 0.0, 0.0, 0.0, 0.0, 1.0]
@@ -49,7 +49,7 @@ class Humanoid(object):
         nums = [1.2 ** random.gauss(50, 9) for _ in range(len(Job))]
 
         probs = [round(100 * round(num / sum(nums), 2)) for num in nums]
-        jobs = ['doctor', 'engineer', 'normal', 'thug', 'fatty', 'pessimist']
+        jobs = ['doctor', 'engineer', 'normal', 'thug', 'imposter', 'pessimist']
 
         # slightly scuffed way of making normal more common
         if random.random() < 0.25:

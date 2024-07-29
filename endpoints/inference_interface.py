@@ -22,7 +22,7 @@ import warnings
 class RLPredictor(object):
     def __init__(self,
                  actions = 4, 
-                 model_file=os.path.join('models', 'baselineRL.pth'),
+                 model_file=os.path.join('', 'model_training/RL-logs/PPO_RL-logs_0_0.pth'),
                  img_data_root='./data'):
         self.actions = actions
         self.net = None
@@ -36,7 +36,14 @@ class RLPredictor(object):
             warnings.warn("Model not loaded, resorting to random prediction")
     def _load_model(self, weights_path, num_classes=4):
         try:
-            self.net = PPO(0,0,0,0,0,False,0.6)
+            K_epochs = 80               # update policy for K epochs in one PPO update
+
+            eps_clip = 0.2          # clip parameter for PPO
+            gamma = 0.99            # discount factor
+
+            lr_actor = 0.0003       # learning rate for actor network
+            lr_critic = 0.001       # learning rate for critic network
+            self.net = PPO(lr_actor,lr_critic,gamma,K_epochs,eps_clip,False,0.6)
             self.net.load(weights_path)
             return True
         except Exception as e:  # file not found, maybe others?
@@ -50,7 +57,7 @@ class RLPredictor(object):
         return action
 
 class InferInterface(Env):
-    def __init__(self, root, w, h, data_parser, scorekeeper, classifier_model_file=os.path.join('models', 'baseline.pth'), rl_model_file=os.path.join('models', 'baselineRL.pth'), img_data_root='data', display=False, ):
+    def __init__(self, root, w, h, data_parser, scorekeeper, classifier_model_file=os.path.join('models', 'baseline.pth'), rl_model_file=os.path.join('models', 'model_training/RL-logs/PPO_RL-logs_0_0.pth'), img_data_root='data', display=False, ):
         """
         initializes RL training interface
         
@@ -64,14 +71,17 @@ class InferInterface(Env):
         self.display = display
 
         self.environment_params = {
-            "car_capacity" : self.scorekeeper.capacity,
-            "num_classes" : len(Humanoid.get_all_states()),
-            "num_actions" : self.scorekeeper.actions,
+            "car_capacity": self.scorekeeper.capacity,
+            "num_classes": len(Humanoid.get_all_states()),
+            "num_jobs": len(Humanoid.get_all_jobs()),
+            "num_actions": self.scorekeeper.actions,
         }
-        self.observation_space = {"variables": np.zeros(3),
-                                  "vehicle_storage_class_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes'])),
-                                    "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
-                                    "doable_actions":np.ones(self.environment_params['num_actions'],np.int64),
+        self.observation_space = {"variables": np.zeros(4),
+                                  "vehicle_storage_class_probs": np.zeros((self.environment_params['car_capacity'], self.environment_params['num_classes'])),
+                                  "vehicle_storage_job_probs": np.zeros((self.environment_params['car_capacity'],self.environment_params['num_jobs'])),
+                                  "humanoid_class_probs": np.zeros(self.environment_params['num_classes']),
+                                  "job_probs": np.zeros(self.environment_params['num_jobs']),
+                                  "doable_actions": np.ones(self.environment_params['num_actions'], np.int64),
                                     }
 
         self.action_space = spaces.Discrete(self.environment_params['num_actions'],)
@@ -96,10 +106,12 @@ class InferInterface(Env):
         resets game for a new episode to run.
         returns observation space
         """
-        self.observation_space = {"variables": np.zeros(3),
+        self.observation_space = {"variables": np.zeros(4),
                                   "vehicle_storage_class_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes'])),
-                                    "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
-                                    "doable_actions":np.ones(self.environment_params['num_actions'],np.int64),
+                                  "vehicle_storage_job_probs" : np.zeros((self.environment_params['car_capacity'],self.environment_params['num_jobs'])),
+                                  "humanoid_class_probs":np.zeros(self.environment_params['num_classes']),
+                                  "job_probs": np.zeros(self.environment_params['num_jobs']),
+                                  "doable_actions":np.ones(self.environment_params['num_actions'],np.int64),
                                     }
         self.previous_cum_reward = 0
         self.data_parser.reset()
@@ -113,8 +125,11 @@ class InferInterface(Env):
         self.observation_space['variables'] = np.array([self.scorekeeper.remaining_time, 
                                                         self.previous_cum_reward,
                                                         sum(self.scorekeeper.ambulance.values()),
+                                                        self.scorekeeper.serum
                                                         ])
         self.observation_space["doable_actions"] = self.scorekeeper.available_action_space()
+        self.observation_space["humanoid_class_probs"] = self.humanoid_probs
+        self.observation_space["job_probs"] = self.job_probs
         return self.observation_space
     
     def act(self, humanoid, pred=True):
@@ -125,21 +140,22 @@ class InferInterface(Env):
         """
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
         if pred:
-            humanoid_probs = self.prob_predictor.get_probs(img_)
+            self.humanoid_probs = self.prob_predictor.get_probs(img_)
         # print(f"pred-class: {Humanoid.get_all_states()[np.argmax(humanoid_probs)]}")
         # print(f"preds: {humanoid_probs}")
         else:
-            humanoid_probs = oracle(humanoid)  # getting the exact class of the humanoid in the probs
+            self.humanoid_probs = oracle(humanoid)  # getting the exact class of the humanoid in the probs
         # print(f"ground truth: {humanoid.state}")
         # print(f"oracle: {humanoid_probs}\n")
-        self.observation_space["humanoid_class_probs"] = humanoid_probs
+        self.observation_space["job_probs"] = humanoid.raw_probs
+        self.observation_space["humanoid_class_probs"] = self.humanoid_probs
         
         action_idx = self.action_predictor.get_action(self.get_observation_space())
         action = ScoreKeeper.get_action_string(action_idx)
 
         self.scorekeeper.map_do_action(action_idx, humanoid)
         if action == "save":
-            self.observation_space["vehicle_storage_class_probs"][self.scorekeeper.get_current_capacity()-1] = humanoid_probs
+            self.observation_space["vehicle_storage_class_probs"][self.scorekeeper.get_current_capacity()-1] = self.humanoid_probs
         elif action == "scram":
             self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes']))
     
@@ -151,11 +167,12 @@ class InferInterface(Env):
         """
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
         if pred:
-            humanoid_probs = self.prob_predictor.get_probs(img_)
+            self.humanoid_probs = self.prob_predictor.get_probs(img_)
         else:
-            humanoid_probs = oracle(humanoid)
+            self.humanoid_probs = oracle(humanoid)
 
-        self.observation_space["humanoid_class_probs"] = humanoid_probs
+        self.observation_space["job_probs"] = humanoid.raw_probs
+        self.observation_space["humanoid_class_probs"] = self.humanoid_probs
         
         action_idx = self.action_predictor.get_action(self.get_observation_space())
         action = ScoreKeeper.get_action_string(action_idx)
