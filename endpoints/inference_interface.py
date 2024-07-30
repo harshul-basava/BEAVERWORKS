@@ -85,21 +85,20 @@ class InferInterface(Env):
                                     }
 
         self.action_space = spaces.Discrete(self.environment_params['num_actions'],)
-        
-        self.prob_predictor = Predictor(classifier_model_file)
+
         self.action_predictor = RLPredictor(rl_model_file)
         
         #helper variables
         self.reset()
 
-        if self.display:
-            self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.1 * h))
-            self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.75 * h))
-            self.label = tk.Label(self.canvas, text="Simon says...", font=("Arial", 20))
-            self.label.pack(side=tk.TOP)
-
-            self.suggestion = tk.Label(self.canvas, text=self.text, font=("Arial", 20))
-            self.suggestion.pack(side=tk.TOP)
+        # if self.display:
+        #     self.canvas = tk.Canvas(root, width=math.floor(0.2 * w), height=math.floor(0.1 * h))
+        #     self.canvas.place(x=math.floor(0.75 * w), y=math.floor(0.75 * h))
+        #     self.label = tk.Label(self.canvas, text="Simon says...", font=("Arial", 20))
+        #     self.label.pack(side=tk.TOP)
+        #
+        #     self.suggestion = tk.Label(self.canvas, text=self.text, font=("Arial", 20))
+        #     self.suggestion.pack(side=tk.TOP)
             
     def reset(self):
         """
@@ -117,7 +116,8 @@ class InferInterface(Env):
         self.data_parser.reset()
         self.scorekeeper.reset()
         return self.observation_space
-    
+
+
     def get_observation_space(self):
         """
         updates the observation space
@@ -132,23 +132,17 @@ class InferInterface(Env):
         self.observation_space["job_probs"] = self.job_probs
         return self.observation_space
     
-    def act(self, humanoid, pred=True):
+    def act(self, humanoid):
         """
         Acts on the environment according the humanoid given and its observation state
         
         humanoid : the humanoid being presented
         """
         img_ = Image.open(os.path.join(self.img_data_root, humanoid.fp))
-        if pred:
-            self.humanoid_probs = self.prob_predictor.get_probs(img_)
-        # print(f"pred-class: {Humanoid.get_all_states()[np.argmax(humanoid_probs)]}")
-        # print(f"preds: {humanoid_probs}")
-        else:
-            self.humanoid_probs = oracle(humanoid)  # getting the exact class of the humanoid in the probs
-        # print(f"ground truth: {humanoid.state}")
-        # print(f"oracle: {humanoid_probs}\n")
-        self.observation_space["job_probs"] = humanoid.raw_probs
-        self.observation_space["humanoid_class_probs"] = self.humanoid_probs
+
+        # getting the exact class + job probs of the humanoid in the probs
+        self.job_probs = humanoid.raw_probs
+        self.humanoid_probs = oracle(humanoid)
         
         action_idx = self.action_predictor.get_action(self.get_observation_space())
         action = ScoreKeeper.get_action_string(action_idx)
