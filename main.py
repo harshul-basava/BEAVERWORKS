@@ -87,15 +87,20 @@ class Main(object):
         elif mode == 'infer-loop':  # RL training script
             for i in range(n):
                 diff = random.choice(["hard", "easy"])
+                self.scorekeeper.diff = diff
 
                 simon = InferInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
                 while len(simon.data_parser.unvisited) > 0:
                     if simon.scorekeeper.remaining_time <= 0:
                         break
                     else:
-                        humanoid = self.data_parser.get_random()
+                        if len(simon.scorekeeper.logger) > 0 and simon.scorekeeper.logger[-1]['action'] == 'reveal':
+                            humanoid.reveal_job_probs()  # if the last action was reveal, don't get a new human
+                            simon.job_probs = humanoid.raw_probs  # set the new observation space w/ the revealed probs
+                        else:
+                            humanoid = self.data_parser.get_random()  # otherwise get a new human
                         if diff == "easy":
-                            humanoid.reveal_job_probs()
+                            humanoid.reveal_job_probs()  # if its easy mode reveal the new human instantly before acting
                         simon.act(humanoid)
                 self.scorekeeper = simon.scorekeeper
                 print("RL equiv reward:", self.scorekeeper.get_cumulative_reward())
