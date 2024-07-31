@@ -18,6 +18,7 @@ class ScoreKeeper(object):
         self.carrying = []
         
         self.actions = 5
+        self.diff = None
         
         self.logger = []
         self.all_logs = []
@@ -88,14 +89,11 @@ class ScoreKeeper(object):
             log = f'{fp}/log_{run_num}_{diff}.csv'
             logs.to_csv(log)
         elif mode == "rl":
-            log = f'{fp}/log_{run_num}.csv'
+            log = f'{fp}/log_{run_num}_{diff}.csv'
             logs.to_csv(log)
         else:
             log = f'log.csv'
             logs.to_csv(log)
-
-        with open(log, mode='a') as file:
-            file.write("Killed: " + str(self.scorekeeper["killed"]) + " Saved: " + str(self.scorekeeper["saved"]))
 
         with open(log, mode='a') as file:
             file.write("Killed: " + str(self.scorekeeper["killed"]) + " Saved: " + str(self.scorekeeper["saved"]))
@@ -172,7 +170,7 @@ class ScoreKeeper(object):
 
     def reveal(self, humanoid):
         
-        if(humanoid.revealedd()):
+        if humanoid.revealedd() or self.diff == "easy":
             return
         
         "shows the occupation of the current human/zombie"
@@ -238,6 +236,8 @@ class ScoreKeeper(object):
         if self.at_capacity():
             action_dict['save'] = False
         if len(self.logger) > 0 and self.logger[-1]['action'] == 'reveal':
+            action_dict['reveal'] = False
+        if self.diff == "easy":
             action_dict['reveal'] = False
         return [action_dict[s.value] for s in ActionState]
         

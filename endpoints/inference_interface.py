@@ -150,8 +150,10 @@ class InferInterface(Env):
         self.scorekeeper.map_do_action(action_idx, humanoid)
         if action == "save":
             self.observation_space["vehicle_storage_class_probs"][self.scorekeeper.get_current_capacity()-1] = self.humanoid_probs
+            self.observation_space["vehicle_storage_job_probs"][self.scorekeeper.get_current_capacity()-1] = self.job_probs
         elif action == "scram":
             self.observation_space["vehicle_storage_class_probs"] = np.zeros((self.environment_params['car_capacity'],self.environment_params['num_classes']))
+            self.observation_space["vehicle_storage_job_probs"] = np.zeros((self.environment_params['car_capacity'], self.environment_params['num_jobs']))
     
     def suggest(self, humanoid, pred=True):
         """
