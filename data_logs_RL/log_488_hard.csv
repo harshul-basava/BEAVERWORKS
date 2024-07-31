@@ -1,0 +1,17 @@
+,humanoid_class,humanoid_fp,humanoid_probs,humanoid_job,action,remaining_time,capacity,local_run_id
+0,zombie,consolidated_dataset/test_00095.png,"{'doctor': 14, 'engineer': 5, 'normal': 2, 'thug': 0, 'imposter': 19, 'pessimist': 60}",doctor,skip,720,0,0
+1,healthy,consolidated_dataset/test_00019.png,"{'doctor': 1, 'engineer': 3, 'normal': 70, 'thug': 1, 'imposter': 0, 'pessimist': 25}",pessimist,skip,700,0,0
+2,zombie,consolidated_dataset/test_00198.png,"{'doctor': 4, 'engineer': 2, 'normal': 60, 'thug': 18, 'imposter': 2, 'pessimist': 13}",normal,squish,680,0,0
+3,healthy,consolidated_dataset/test_00000.png,"{'doctor': 39, 'engineer': 12, 'normal': 23, 'thug': 8, 'imposter': 8, 'pessimist': 9}",pessimist,save,665,0,0
+4,zombie,consolidated_dataset/test_00116.png,"{'doctor': 10, 'engineer': 4, 'normal': 47, 'thug': 11, 'imposter': 28, 'pessimist': 2}",engineer,scram,635,1,0
+5,zombie,consolidated_dataset/test_00161.png,"{'doctor': 2, 'engineer': 32, 'normal': 50, 'thug': 3, 'imposter': 13, 'pessimist': 0}",normal,skip,585,0,0
+6,zombie,consolidated_dataset/test_00005.png,"{'doctor': 16, 'engineer': 39, 'normal': 12, 'thug': 3, 'imposter': 3, 'pessimist': 27}",doctor,skip,565,0,0
+7,healthy,consolidated_dataset/test_00038.png,"{'doctor': 93, 'engineer': 1, 'normal': 1, 'thug': 1, 'imposter': 1, 'pessimist': 4}",doctor,save,545,0,0
+8,healthy,consolidated_dataset/test_00066.png,"{'doctor': 24, 'engineer': 6, 'normal': 2, 'thug': 50, 'imposter': 16, 'pessimist': 3}",thug,squish,515,1,0
+9,healthy,consolidated_dataset/test_00075.png,"{'doctor': 34, 'engineer': 5, 'normal': 32, 'thug': 9, 'imposter': 19, 'pessimist': 1}",imposter,save,500,1,0
+10,healthy,consolidated_dataset/test_00057.png,"{'doctor': 7, 'engineer': 19, 'normal': 15, 'thug': 0, 'imposter': 59, 'pessimist': 0}",imposter,save,470,2,0
+11,healthy,consolidated_dataset/test_00183.png,"{'doctor': 2, 'engineer': 40, 'normal': 1, 'thug': 28, 'imposter': 29, 'pessimist': 0}",engineer,skip,440,3,0
+12,healthy,consolidated_dataset/test_00025.png,"{'doctor': 6, 'engineer': 82, 'normal': 2, 'thug': 1, 'imposter': 9, 'pessimist': 1}",engineer,scram,420,3,0
+13,healthy,consolidated_dataset/test_00085.png,"{'doctor': 14, 'engineer': 0, 'normal': 57, 'thug': 2, 'imposter': 2, 'pessimist': 24}",pessimist,save,70,0,0
+14,zombie,consolidated_dataset/test_00042.png,"{'doctor': 40, 'engineer': 1, 'normal': 1, 'thug': 9, 'imposter': 43, 'pessimist': 5}",doctor,scram,40,1,0
+Killed: 1 Saved: 5

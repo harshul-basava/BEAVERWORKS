@@ -20,11 +20,11 @@ def train(env):
 
     max_ep_len = 200                   # max timesteps in one episode
     # max_ep_len = 2                   # max timesteps in one episode
-    max_training_timesteps = int(1e5)   # break training loop if timeteps > max_training_timesteps
+    max_training_timesteps = int(1e6)   # break training loop if timeteps > max_training_timesteps
 
     print_freq = max_ep_len * 10        # print avg reward in the interval (in num timesteps)
     log_freq = max_ep_len * 2           # log avg reward in the interval (in num timesteps)
-    save_model_freq = int(1e5)          # save model frequency (in num timesteps)
+    save_model_freq = int(5e5)          # save model frequency (in num timesteps)
 
     action_std = 0.6                    # starting std for action distribution (Multivariate Normal)
     action_std_decay_rate = 0.05        # linearly decay action_std (action_std = action_std - action_std_decay_rate)
@@ -73,7 +73,7 @@ def train(env):
     #####################################################
 
     ################### checkpointing ###################
-    run_num_pretrained = 0      #### change this to prevent overwriting weights in same env_name folder
+    run_num_pretrained = 1      #### change this to prevent overwriting weights in same env_name folder
 
     directory = "model_training"
     if not os.path.exists(directory):
