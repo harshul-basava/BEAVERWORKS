@@ -17,7 +17,7 @@ class ActionCost(Enum):
     SQUISH = 15
     SKIP = 20
     SCRAM = 50
-    REVEAL = 30
+    REVEAL = 15
 
 class Job(Enum):
     DOCTOR = "doctor"

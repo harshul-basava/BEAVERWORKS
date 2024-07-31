@@ -83,12 +83,19 @@ class ScoreKeeper(object):
             log['local_run_id'] = i
             logs.append(log)
         logs = pd.concat(logs, ignore_index=True)
-        if mode == "player" or mode == "rl":
+
+        if mode == "player":
             log = f'{fp}/log_{run_num}_{diff}.csv'
             logs.to_csv(log)
-        else:
-            log = 'log.csv'
+        elif mode == "rl":
+            log = f'{fp}/log_{run_num}.csv'
             logs.to_csv(log)
+        else:
+            log = f'log.csv'
+            logs.to_csv(log)
+
+        with open(log, mode='a') as file:
+            file.write("Killed: " + str(self.scorekeeper["killed"]) + " Saved: " + str(self.scorekeeper["saved"]))
 
         with open(log, mode='a') as file:
             file.write("Killed: " + str(self.scorekeeper["killed"]) + " Saved: " + str(self.scorekeeper["saved"]))
