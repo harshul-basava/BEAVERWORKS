@@ -102,6 +102,7 @@ class Main(object):
                 print(self.scorekeeper.get_score())
 
                 self.scorekeeper.save_log("rl", diff)
+                self.scorekeeper.reset()
         else: # Launch UI gameplay
             self.root = tk.Tk()
             self.root.geometry("1280x800")

@@ -22,7 +22,7 @@ import warnings
 class RLPredictor(object):
     def __init__(self,
                  actions = 4, 
-                 model_file=os.path.join('', 'model_training/RL-logs/PPO_RL-logs_0_0.pth'),
+                 model_file=os.path.join('', 'model_training/RL-logs/PPO_RL-logs_0_1.pth'),
                  img_data_root='./data'):
         self.actions = actions
         self.net = None

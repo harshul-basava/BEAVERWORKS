@@ -41,7 +41,7 @@ class ScoreKeeper(object):
         }
         self.remaining_time = int(self.shift_len)  # minutes
         
-        self.all_logs.append(self.logger)
+        self.all_logs = []
         self.logger = []
     
     def log(self, humanoid, action):

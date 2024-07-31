@@ -1,0 +1,27 @@
+,humanoid_class,humanoid_fp,humanoid_probs,humanoid_job,action,remaining_time,capacity,local_run_id
+0,zombie,consolidated_dataset/test_00029.png,"{'doctor': 5, 'engineer': 84, 'normal': 4, 'thug': 4, 'imposter': 1, 'pessimist': 1}",engineer,skip,720.0,0,0
+1,zombie,consolidated_dataset/test_00049.png,"{'doctor': 3, 'engineer': 62, 'normal': 29, 'thug': 3, 'imposter': 0, 'pessimist': 4}",engineer,skip,700.0,0,0
+2,zombie,consolidated_dataset/test_00088.png,"{'doctor': 2, 'engineer': 22, 'normal': 54, 'thug': 5, 'imposter': 15, 'pessimist': 2}",engineer,squish,680.0,0,0
+3,zombie,consolidated_dataset/test_00005.png,"{'doctor': 2, 'engineer': 2, 'normal': 4, 'thug': 13, 'imposter': 11, 'pessimist': 68}",pessimist,reveal,665.0,0,0
+4,healthy,consolidated_dataset/test_00148.png,"{'doctor': 22, 'engineer': 2, 'normal': 46, 'thug': 2, 'imposter': 18, 'pessimist': 11}",pessimist,save,635.0,0,0
+5,zombie,consolidated_dataset/test_00082.png,"{'doctor': 1, 'engineer': 90, 'normal': 5, 'thug': 2, 'imposter': 1, 'pessimist': 0}",engineer,scram,605.0,1,0
+6,healthy,consolidated_dataset/test_00184.png,"{'doctor': 1, 'engineer': 1, 'normal': 43, 'thug': 33, 'imposter': 21, 'pessimist': 0}",thug,save,555.0,0,0
+7,healthy,consolidated_dataset/test_00056.png,"{'doctor': 16, 'engineer': 36, 'normal': 38, 'thug': 1, 'imposter': 1, 'pessimist': 7}",engineer,save,525.0,1,0
+8,healthy,consolidated_dataset/test_00021.png,"{'doctor': 2, 'engineer': 14, 'normal': 68, 'thug': 2, 'imposter': 11, 'pessimist': 4}",pessimist,save,495.0,2,0
+9,zombie,consolidated_dataset/test_00198.png,"{'doctor': 9, 'engineer': 3, 'normal': 48, 'thug': 28, 'imposter': 7, 'pessimist': 4}",thug,scram,465.0,3,0
+10,zombie,consolidated_dataset/test_00009.png,"{'doctor': 9, 'engineer': 50, 'normal': 1, 'thug': 8, 'imposter': 30, 'pessimist': 1}",engineer,skip,487.0,0,0
+11,zombie,consolidated_dataset/test_00033.png,"{'doctor': 1, 'engineer': 36, 'normal': 0, 'thug': 34, 'imposter': 5, 'pessimist': 24}",engineer,skip,467.0,0,0
+12,healthy,consolidated_dataset/test_00150.png,"{'doctor': 10, 'engineer': 9, 'normal': 78, 'thug': 0, 'imposter': 2, 'pessimist': 1}",doctor,save,447.0,0,0
+13,healthy,consolidated_dataset/test_00176.png,"{'doctor': 15, 'engineer': 0, 'normal': 1, 'thug': 0, 'imposter': 9, 'pessimist': 75}",pessimist,save,417.0,1,0
+14,zombie,consolidated_dataset/test_00156.png,"{'doctor': 10, 'engineer': 2, 'normal': 38, 'thug': 12, 'imposter': 10, 'pessimist': 28}",normal,scram,387.0,2,0
+15,healthy,consolidated_dataset/test_00052.png,"{'doctor': 4, 'engineer': 37, 'normal': 13, 'thug': 23, 'imposter': 16, 'pessimist': 8}",engineer,save,337.0,0,0
+16,healthy,consolidated_dataset/test_00068.png,"{'doctor': 89, 'engineer': 4, 'normal': 2, 'thug': 0, 'imposter': 1, 'pessimist': 5}",doctor,save,307.0,1,0
+17,zombie,consolidated_dataset/test_00024.png,"{'doctor': 0, 'engineer': 82, 'normal': 15, 'thug': 1, 'imposter': 1, 'pessimist': 0}",engineer,save,277.0,2,0
+18,zombie,consolidated_dataset/test_00060.png,"{'doctor': 3, 'engineer': 1, 'normal': 87, 'thug': 1, 'imposter': 7, 'pessimist': 1}",normal,skip,247.0,3,0
+19,healthy,consolidated_dataset/test_00059.png,"{'doctor': 1, 'engineer': 1, 'normal': 94, 'thug': 2, 'imposter': 1, 'pessimist': 3}",normal,save,227.0,3,0
+20,zombie,consolidated_dataset/test_00108.png,"{'doctor': 13, 'engineer': 1, 'normal': 1, 'thug': 0, 'imposter': 38, 'pessimist': 47}",imposter,scram,197.0,4,0
+21,zombie,consolidated_dataset/test_00095.png,"{'doctor': 13, 'engineer': 25, 'normal': 45, 'thug': 6, 'imposter': 9, 'pessimist': 3}",thug,scram,147.0,0,0
+22,healthy,consolidated_dataset/test_00109.png,"{'doctor': 1, 'engineer': 14, 'normal': 4, 'thug': 2, 'imposter': 2, 'pessimist': 77}",pessimist,save,97.0,0,0
+23,zombie,consolidated_dataset/test_00170.png,"{'doctor': 53, 'engineer': 4, 'normal': 10, 'thug': 28, 'imposter': 1, 'pessimist': 5}",doctor,scram,67.0,1,0
+24,healthy,consolidated_dataset/test_00128.png,"{'doctor': 1, 'engineer': 82, 'normal': 0, 'thug': 7, 'imposter': 0, 'pessimist': 9}",engineer,save,17.0,0,0
+Killed: 5 Saved: 6
