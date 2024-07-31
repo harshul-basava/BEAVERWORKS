@@ -83,13 +83,15 @@ class ScoreKeeper(object):
             log['local_run_id'] = i
             logs.append(log)
         logs = pd.concat(logs, ignore_index=True)
-        if mode == "player":
-            logs.to_csv(f'{fp}/log_{run_num}_{diff}.csv')
-        elif mode == "rl":
-            logs.to_csv(f'{fp}/log_{run_num}.csv')
+        if mode == "player" or mode == "rl":
+            log = f'{fp}/log_{run_num}_{diff}.csv'
+            logs.to_csv(log)
         else:
-            logs.to_csv(f'log.csv')
+            log = 'log.csv'
+            logs.to_csv(log)
 
+        with open(log, mode='a') as file:
+            file.write("Killed: " + str(self.scorekeeper["killed"]) + " Saved: " + str(self.scorekeeper["saved"]))
     def save(self, humanoid):
         """
         saves the humanoid, applies serum on zombie if available

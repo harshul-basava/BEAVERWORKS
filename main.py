@@ -1,4 +1,5 @@
 import argparse
+import sys
 import os
 from endpoints.data_parser import DataParser
 from endpoints.heuristic_interface import HeuristicInterface
@@ -21,8 +22,6 @@ class Main(object):
     def __init__(self, mode, log):
         self.data_fp = os.getenv("SGAI_DATA", default='data')
         self.data_parser = DataParser(self.data_fp)
-
-        self.root = tk.Tk()
 
         shift_length = 720
         capacity = 10
@@ -60,19 +59,32 @@ class Main(object):
             if log:
                 self.scorekeeper.save_log()
         elif mode == 'infer':  # RL training script
+            inp = input("E/H: ")
+
+            if inp.upper() == "H":
+                diff = "hard"
+            elif inp.upper() == "E":
+                diff = "easy"
+            else:
+                sys.exit()
+
             simon = InferInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
             while len(simon.data_parser.unvisited) > 0:
                 if simon.scorekeeper.remaining_time <= 0:
                     break
                 else:
                     humanoid = self.data_parser.get_random()
+                    if diff == "easy":
+                        humanoid.reveal_job_probs()
                     simon.act(humanoid)
             self.scorekeeper = simon.scorekeeper
-            if log:
-                self.scorekeeper.save_log()
-            print("RL equiv reward:",self.scorekeeper.get_cumulative_reward())
+            print("RL equiv reward:", self.scorekeeper.get_cumulative_reward())
             print(self.scorekeeper.get_score())
+
+            if log:
+                self.scorekeeper.save_log("rl", diff)
         else: # Launch UI gameplay
+            self.root = tk.Tk()
             self.root.geometry("1280x800")
             self.image = ImageTk.PhotoImage(Image.open(f"ui_elements/graphics/Team_Husk.png"))
             label1 = tk.Label(self.root, image=self.image)
