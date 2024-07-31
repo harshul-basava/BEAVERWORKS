@@ -1,4 +1,5 @@
 import argparse
+import random
 import sys
 import os
 from endpoints.data_parser import DataParser
@@ -19,7 +20,7 @@ class Main(object):
     """
     Base class for the SGAI 2023 game
     """
-    def __init__(self, mode, log):
+    def __init__(self, mode, log, n):
         self.data_fp = os.getenv("SGAI_DATA", default='data')
         self.data_parser = DataParser(self.data_fp)
 
@@ -83,6 +84,24 @@ class Main(object):
 
             if log:
                 self.scorekeeper.save_log("rl", diff)
+        elif mode == 'infer-loop':  # RL training script
+            for i in range(n):
+                diff = random.choice(["hard", "easy"])
+
+                simon = InferInterface(None, None, None, self.data_parser, self.scorekeeper, display=False,)
+                while len(simon.data_parser.unvisited) > 0:
+                    if simon.scorekeeper.remaining_time <= 0:
+                        break
+                    else:
+                        humanoid = self.data_parser.get_random()
+                        if diff == "easy":
+                            humanoid.reveal_job_probs()
+                        simon.act(humanoid)
+                self.scorekeeper = simon.scorekeeper
+                print("RL equiv reward:", self.scorekeeper.get_cumulative_reward())
+                print(self.scorekeeper.get_score())
+
+                self.scorekeeper.save_log("rl", diff)
         else: # Launch UI gameplay
             self.root = tk.Tk()
             self.root.geometry("1280x800")
@@ -118,10 +137,11 @@ if __name__ == "__main__":
         prog='python3 main.py',
         description='What the program does',
         epilog='Text at the bottom of help')
-    parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer'],)
+    parser.add_argument('-m', '--mode', type=str, default = 'user', choices = ['user','heuristic','train','infer', 'infer-loop'],)
     parser.add_argument('-l', '--log', type=bool, default = False)
+    parser.add_argument('-n', '--num', type=int, default=0)
     # parser.add_argument('-a', '--automode', action='store_true', help='No UI, run autonomously with model suggestions')
     # parser.add_argument('-d', '--disable', action='store_true', help='Disable model help')
 
     args = parser.parse_args()
-    Main(args.mode, args.log)
+    Main(args.mode, args.log, args.num)
