@@ -1,0 +1,37 @@
+,local_run_id,humanoid_class,humanoid_fp,humanoid_probs,humanoid_job,action,remaining_time,capacity
+0,1,healthy,consolidated_dataset/test_00141.png,"{'doctor': 21, 'engineer': 33, 'normal': 7, 'thug': 32, 'imposter': 8, 'pessimist': 0}",engineer,reveal,720.0,0.0
+1,1,healthy,consolidated_dataset/test_00141.png,"{'doctor': 21, 'engineer': 33, 'normal': 7, 'thug': 32, 'imposter': 8, 'pessimist': 0}",engineer,save,690.0,0.0
+2,1,zombie,consolidated_dataset/test_00027.png,"{'doctor': 6, 'engineer': 12, 'normal': 42, 'thug': 1, 'imposter': 27, 'pessimist': 12}",normal,squish,660.0,1.0
+3,1,healthy,consolidated_dataset/test_00100.png,"{'doctor': 57, 'engineer': 10, 'normal': 5, 'thug': 11, 'imposter': 7, 'pessimist': 9}",normal,save,645.0,1.0
+4,1,healthy,consolidated_dataset/test_00163.png,"{'doctor': 15, 'engineer': 1, 'normal': 65, 'thug': 15, 'imposter': 3, 'pessimist': 1}",normal,save,615.0,2.0
+5,1,zombie,consolidated_dataset/test_00046.png,"{'doctor': 21, 'engineer': 3, 'normal': 3, 'thug': 19, 'imposter': 14, 'pessimist': 40}",imposter,squish,585.0,3.0
+6,1,zombie,consolidated_dataset/test_00106.png,"{'doctor': 6, 'engineer': 2, 'normal': 68, 'thug': 1, 'imposter': 1, 'pessimist': 21}",pessimist,squish,570.0,3.0
+7,1,healthy,consolidated_dataset/test_00120.png,"{'doctor': 2, 'engineer': 25, 'normal': 3, 'thug': 57, 'imposter': 11, 'pessimist': 2}",thug,skip,555.0,3.0
+8,1,healthy,consolidated_dataset/test_00075.png,"{'doctor': 45, 'engineer': 6, 'normal': 11, 'thug': 27, 'imposter': 1, 'pessimist': 10}",doctor,save,535.0,3.0
+9,1,healthy,consolidated_dataset/test_00062.png,"{'doctor': 60, 'engineer': 0, 'normal': 2, 'thug': 1, 'imposter': 1, 'pessimist': 36}",doctor,save,505.0,4.0
+10,1,healthy,consolidated_dataset/test_00053.png,"{'doctor': 16, 'engineer': 7, 'normal': 28, 'thug': 17, 'imposter': 10, 'pessimist': 21}",normal,scram,475.0,5.0
+11,1,healthy,consolidated_dataset/test_00171.png,"{'doctor': 5, 'engineer': 14, 'normal': 0, 'thug': 3, 'imposter': 24, 'pessimist': 54}",imposter,skip,545.0,0.0
+12,1,healthy,consolidated_dataset/test_00000.png,"{'doctor': 3, 'engineer': 3, 'normal': 1, 'thug': 7, 'imposter': 1, 'pessimist': 85}",pessimist,skip,525.0,0.0
+13,1,healthy,consolidated_dataset/test_00085.png,"{'doctor': 6, 'engineer': 7, 'normal': 33, 'thug': 0, 'imposter': 22, 'pessimist': 31}",normal,save,505.0,0.0
+14,1,healthy,consolidated_dataset/test_00096.png,"{'doctor': 18, 'engineer': 57, 'normal': 7, 'thug': 7, 'imposter': 2, 'pessimist': 9}",normal,save,475.0,1.0
+15,1,zombie,consolidated_dataset/test_00161.png,"{'doctor': 1, 'engineer': 4, 'normal': 9, 'thug': 21, 'imposter': 2, 'pessimist': 64}",thug,squish,445.0,2.0
+16,1,healthy,consolidated_dataset/test_00063.png,"{'doctor': 0, 'engineer': 12, 'normal': 4, 'thug': 66, 'imposter': 6, 'pessimist': 11}",normal,skip,430.0,2.0
+17,1,healthy,consolidated_dataset/test_00017.png,"{'doctor': 5, 'engineer': 75, 'normal': 1, 'thug': 15, 'imposter': 3, 'pessimist': 0}",thug,save,410.0,2.0
+18,1,healthy,consolidated_dataset/test_00158.png,"{'doctor': 25, 'engineer': 3, 'normal': 56, 'thug': 2, 'imposter': 8, 'pessimist': 6}",normal,save,380.0,3.0
+19,1,zombie,consolidated_dataset/test_00088.png,"{'doctor': 11, 'engineer': 5, 'normal': 7, 'thug': 15, 'imposter': 18, 'pessimist': 44}",pessimist,squish,350.0,4.0
+20,1,healthy,consolidated_dataset/test_00150.png,"{'doctor': 2, 'engineer': 54, 'normal': 4, 'thug': 29, 'imposter': 9, 'pessimist': 3}",thug,save,335.0,4.0
+21,1,zombie,consolidated_dataset/test_00024.png,"{'doctor': 2, 'engineer': 45, 'normal': 31, 'thug': 1, 'imposter': 17, 'pessimist': 4}",imposter,save,305.0,5.0
+22,1,healthy,consolidated_dataset/test_00114.png,"{'doctor': 46, 'engineer': 38, 'normal': 0, 'thug': 0, 'imposter': 1, 'pessimist': 15}",engineer,save,275.0,6.0
+23,1,healthy,consolidated_dataset/test_00196.png,"{'doctor': 19, 'engineer': 6, 'normal': 53, 'thug': 6, 'imposter': 7, 'pessimist': 9}",normal,scram,245.0,7.0
+24,1,zombie,consolidated_dataset/test_00199.png,"{'doctor': 12, 'engineer': 1, 'normal': 67, 'thug': 2, 'imposter': 13, 'pessimist': 4}",normal,save,165.0,0.0
+25,1,zombie,consolidated_dataset/test_00092.png,"{'doctor': 1, 'engineer': 66, 'normal': 22, 'thug': 7, 'imposter': 2, 'pessimist': 3}",normal,squish,135.0,1.0
+26,1,healthy,consolidated_dataset/test_00169.png,"{'doctor': 2, 'engineer': 2, 'normal': 46, 'thug': 16, 'imposter': 1, 'pessimist': 33}",pessimist,skip,120.0,1.0
+27,1,zombie,consolidated_dataset/test_00086.png,"{'doctor': 7, 'engineer': 2, 'normal': 5, 'thug': 83, 'imposter': 2, 'pessimist': 1}",engineer,squish,100.0,1.0
+28,1,healthy,consolidated_dataset/test_00025.png,"{'doctor': 22, 'engineer': 48, 'normal': 6, 'thug': 2, 'imposter': 18, 'pessimist': 4}",engineer,save,85.0,1.0
+29,1,healthy,consolidated_dataset/test_00128.png,"{'doctor': 41, 'engineer': 7, 'normal': 26, 'thug': 19, 'imposter': 3, 'pessimist': 4}",imposter,scram,55.0,2.0
+30,1,zombie,consolidated_dataset/test_00072.png,"{'doctor': 5, 'engineer': 18, 'normal': 0, 'thug': 16, 'imposter': 57, 'pessimist': 4}",thug,squish,125.0,0.0
+31,1,healthy,consolidated_dataset/test_00002.png,"{'doctor': 2, 'engineer': 0, 'normal': 1, 'thug': 4, 'imposter': 89, 'pessimist': 4}",imposter,skip,110.0,0.0
+32,1,zombie,consolidated_dataset/test_00049.png,"{'doctor': 5, 'engineer': 48, 'normal': 5, 'thug': 14, 'imposter': 16, 'pessimist': 11}",engineer,squish,90.0,0.0
+33,1,healthy,consolidated_dataset/test_00143.png,"{'doctor': 2, 'engineer': 1, 'normal': 8, 'thug': 62, 'imposter': 1, 'pessimist': 26}",thug,scram,75.0,0.0
+34,1,healthy,consolidated_dataset/test_00172.png,"{'doctor': 1, 'engineer': 1, 'normal': 66, 'thug': 3, 'imposter': 29, 'pessimist': 0}",thug,scram,25.0,0.0
+Killed: 5 Saved: 9
